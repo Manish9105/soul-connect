@@ -1,0 +1,8 @@
+__pycache__/
+.env
+*.env
+*.joblib
+*.pkl
+venv/
+.env.local
+.vscode/

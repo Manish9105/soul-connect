@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Therapy Exercises - Soul Connect</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .exercise-card { transition: all 0.3s ease; }
+        .exercise-card:hover { transform: translateY(-5px); }
+        .active-exercise { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="gradient-bg text-white shadow-lg">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-heart text-2xl"></i>
+                    <h1 class="text-2xl font-bold">Soul Connect</h1>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="index.html" class="hover:text-purple-200">Home</a>
+                    <a href="chat.html" class="hover:text-purple-200">Chat</a>
+                    <a href="exercises.html" class="font-semibold border-b-2">Exercises</a>
+                    <a href="doctors.html" class="hover:text-purple-200">Find Doctors</a>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <span id="username" class="font-semibold">User</span>
+                    <button onclick="logout()" class="bg-white text-purple-600 px-4 py-2 rounded-lg font-semibold hover:bg-purple-50">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Exercises Section -->
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-gray-800 mb-4">🧘 Therapeutic Exercises</h1>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">Evidence-based techniques to support your mental wellbeing and emotional balance</p>
+        </div>
+
+        <!-- Exercise Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+            <!-- Breathing Exercise -->
+            <div class="exercise-card bg-white rounded-2xl shadow-lg overflow-hidden">
+                <div class="h-48 bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
+                    <i class="fas fa-wind text-6xl text-white"></i>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">🌬️ Deep Breathing</h3>
+                    <p class="text-gray-600 mb-4">Calm your nervous system and reduce anxiety with controlled breathing.</p>
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm">⏱️ 2-5 mins</span>
+                        <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">Reduces Anxiety</span>
+                    </div>
+                     <button onclick="window.location.href='exercise-breathing.html'" class="w-full bg-blue-500 text-white py-3 rounded-lg font-semibold hover:bg-blue-600 transition">
+                      Start Exercise
+                    </button>
+                </div>
+            </div>
+
+            <!-- Grounding Exercise -->
+            <div class="exercise-card bg-white rounded-2xl shadow-lg overflow-hidden">
+                <div class="h-48 bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center">
+                    <i class="fas fa-globe-americas text-6xl text-white"></i>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">🌍 5-4-3-2-1 Grounding</h3>
+                    <p class="text-gray-600 mb-4">Bring yourself back to the present moment by engaging all your senses.</p>
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm">⏱️ 3-5 mins</span>
+                        <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">Present Awareness</span>
+                    </div>
+                    <button onclick="window.location.href='exercise-grounding.html'" class="w-full bg-green-500 text-white py-3 rounded-lg font-semibold hover:bg-green-600 transition">
+                      Start Exercise
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stretching Exercise -->
+            <div class="exercise-card bg-white rounded-2xl shadow-lg overflow-hidden">
+                <div class="h-48 bg-gradient-to-br from-red-400 to-orange-500 flex items-center justify-center">
+                    <i class="fas fa-running text-6xl text-white"></i>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">💪 Gentle Stretching</h3>
+                    <p class="text-gray-600 mb-4">Release physical tension and stress stored in your muscles.</p>
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm">⏱️ 5-7 mins</span>
+                        <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">Releases Tension</span>
+                    </div>
+                     <button onclick="window.location.href='exercise-stretching.html'" class="w-full bg-orange-500 text-white py-3 rounded-lg font-semibold hover:bg-orange-600 transition">
+                       Start Exercise
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mindfulness Exercise -->
+            <div class="exercise-card bg-white rounded-2xl shadow-lg overflow-hidden">
+                <div class="h-48 bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center">
+                    <i class="fas fa-brain text-6xl text-white"></i>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">🧠 Body Scan Meditation</h3>
+                    <p class="text-gray-600 mb-4">Increase body awareness and relaxation through mindful scanning.</p>
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm">⏱️ 5-10 mins</span>
+                        <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">Deep Relaxation</span>
+                    </div>
+                     <button onclick="window.location.href='exercise-mindfulness.html'" class="w-full bg-purple-500 text-white py-3 rounded-lg font-semibold hover:bg-purple-600 transition">
+                      Start Exercise
+                    </button>
+                </div>
+            </div>
+
+            <!-- Progressive Relaxation -->
+            <div class="exercise-card bg-white rounded-2xl shadow-lg overflow-hidden">
+                <div class="h-48 bg-gradient-to-br from-teal-400 to-blue-500 flex items-center justify-center">
+                    <i class="fas fa-battery-full text-6xl text-white"></i>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">🔋 Muscle Relaxation</h3>
+                    <p class="text-gray-600 mb-4">Systematically tense and relax muscle groups to release anxiety.</p>
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm">⏱️ 7-10 mins</span>
+                        <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">Muscle Relaxation</span>
+                    </div>
+                     <button onclick="window.location.href='exercise-progressive.html'" class="w-full bg-teal-500 text-white py-3 rounded-lg font-semibold hover:bg-teal-600 transition">
+                       Start Exercise
+                     </button>
+                </div>
+            </div>
+
+            <!-- Gratitude Exercise -->
+            <div class="exercise-card bg-white rounded-2xl shadow-lg overflow-hidden">
+                <div class="h-48 bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center">
+                    <i class="fas fa-hands-praying text-6xl text-white"></i>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">🙏 Gratitude Journaling</h3>
+                    <p class="text-gray-600 mb-4">Shift your focus to positive aspects and cultivate appreciation.</p>
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm">⏱️ 3-5 mins</span>
+                        <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">Positive Focus</span>
+                    </div>
+                     <button onclick="window.location.href='exercise-gratitude.html'" class="w-full bg-yellow-500 text-white py-3 rounded-lg font-semibold hover:bg-yellow-600 transition">
+                       Start Exercise
+                     </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Active Exercise Section (Hidden by default) -->
+        <div id="activeExercise" class="hidden bg-white rounded-2xl shadow-lg p-8">
+            <div id="exerciseContent">
+                <!-- Exercise content will be loaded here -->
+            </div>
+            <div class="text-center mt-6">
+                <button onclick="completeExercise()" class="bg-green-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-600 transition">
+                    ✅ I've Completed This Exercise
+                </button>
+                <button onclick="hideActiveExercise()" class="ml-4 bg-gray-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-gray-600 transition">
+                    ← Back to Exercises
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', () => {
+           const savedUser = localStorage.getItem('currentUser');
+           if (!savedUser) {
+              window.location.href = 'index.html';
+               return;
+            }
+    
+           const user = JSON.parse(savedUser);
+            document.getElementById('username').textContent = user.username;
+        });
+
+
+
+
+        const exercises = {
+            breathing: {
+                title: "Deep Breathing Exercise",
+                emoji: "🌬️",
+                duration: "2-5 minutes",
+                steps: [
+                    "Find a comfortable sitting position",
+                    "Close your eyes and relax your shoulders",
+                    "Inhale slowly through your nose for 4 seconds",
+                    "Hold your breath for 4 seconds", 
+                    "Exhale slowly through your mouth for 6 seconds",
+                    "Repeat this cycle 5-10 times",
+                    "Focus on the sensation of your breath"
+                ],
+                benefits: ["Reduces anxiety", "Calms nervous system", "Lowers blood pressure"]
+            },
+            grounding: {
+                title: "5-4-3-2-1 Grounding Technique", 
+                emoji: "🌍",
+                duration: "3-5 minutes",
+                steps: [
+                    "Look around and name 5 things you can see",
+                    "Notice 4 things you can touch and feel",
+                    "Listen for 3 things you can hear",
+                    "Identify 2 things you can smell", 
+                    "Recognize 1 thing you can taste",
+                    "Take deep breaths throughout the exercise"
+                ],
+                benefits: ["Brings present moment awareness", "Reduces anxiety", "Grounds in reality"]
+            },
+            stretching: {
+                title: "Gentle Stretching Routine",
+                emoji: "💪", 
+                duration: "5-7 minutes",
+                steps: [
+                    "Neck rolls: Slowly roll head in circles (5 each direction)",
+                    "Shoulder stretches: Cross arms and hold (15 seconds each)",
+                    "Side stretches: Reach overhead to each side (15 seconds each)",
+                    "Forward fold: Bend forward gently (20 seconds)",
+                    "Chest opener: Clasp hands behind back (15 seconds)",
+                    "Take deep breaths during each stretch"
+                ],
+                benefits: ["Releases muscle tension", "Improves circulation", "Reduces stress"]
+            }
+        };
+
+        function startExercise(type) {
+            const exercise = exercises[type];
+            const exerciseContent = document.getElementById('exerciseContent');
+            
+            exerciseContent.innerHTML = `
+                <div class="text-center mb-8">
+                    <div class="text-6xl mb-4">${exercise.emoji}</div>
+                    <h2 class="text-3xl font-bold text-gray-800 mb-2">${exercise.title}</h2>
+                    <p class="text-xl text-gray-600">Duration: ${exercise.duration}</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">📋 Step-by-Step Guide</h3>
+                        <div class="space-y-3">
+                            ${exercise.steps.map((step, index) => `
+                                <div class="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg">
+                                    <span class="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-semibold mt-1">${index + 1}</span>
+                                    <span class="text-gray-700">${step}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">💫 Benefits</h3>
+                        <div class="space-y-2">
+                            ${exercise.benefits.map(benefit => `
+                                <div class="flex items-center space-x-3 p-3 bg-green-50 rounded-lg">
+                                    <i class="fas fa-check text-green-500"></i>
+                                    <span class="text-gray-700">${benefit}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+
+                        <div class="mt-6 p-4 bg-blue-50 rounded-lg">
+                            <h4 class="font-semibold text-blue-800 mb-2">💡 Pro Tip</h4>
+                            <p class="text-blue-700">Find a quiet space and set a timer. Focus on your breathing throughout the exercise.</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('activeExercise').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function hideActiveExercise() {
+            document.getElementById('activeExercise').classList.add('hidden');
+        }
+
+        function completeExercise() {
+            alert('🎉 Great job completing the exercise! Well done!');
+            hideActiveExercise();
+            
+            // You can also send this to your backend
+            const sessionId = localStorage.getItem('session_id');
+            // API call to log exercise completion
+        }
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = 'index.html';
+        }
+
+        // Load user
+        document.addEventListener('DOMContentLoaded', () => {
+            const username = localStorage.getItem('username');
+            if (username) {
+                document.getElementById('username').textContent = username;
+            }
+        });
+    </script>
+</body>
+</html>

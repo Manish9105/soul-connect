@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progressive Muscle Relaxation - Soul Connect</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .muscle-card { transition: all 0.3s ease; }
+        .muscle-card.tensing { background: linear-gradient(135deg, #f87171 0%, #dc2626 100%); color: white; }
+        .muscle-card.relaxing { background: linear-gradient(135deg, #34d399 0%, #059669 100%); color: white; }
+        .pulse-tension { animation: pulse-tension 0.5s ease-in-out infinite; }
+        @keyframes pulse-tension {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <nav class="gradient-bg text-white shadow-lg">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <a href="exercises.html" class="flex items-center space-x-3">
+                        <i class="fas fa-arrow-left"></i>
+                        <i class="fas fa-heart text-2xl"></i>
+                        <h1 class="text-2xl font-bold">Soul Connect</h1>
+                    </a>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="index.html" class="hover:text-purple-200">Home</a>
+                    <a href="chat.html" class="hover:text-purple-200">Chat</a>
+                    <a href="exercises.html" class="hover:text-purple-200">Exercises</a>
+                    <a href="doctors.html" class="hover:text-purple-200">Doctors</a>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <span id="username" class="font-semibold">User</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        <div class="text-center mb-12">
+            <div class="inline-flex items-center justify-center w-20 h-20 bg-teal-100 rounded-2xl mb-4">
+                <i class="fas fa-battery-full text-3xl text-teal-500"></i>
+            </div>
+            <h1 class="text-4xl font-bold text-gray-800 mb-4">Progressive Muscle Relaxation</h1>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">Systematically tense and relax muscle groups to release anxiety</p>
+            
+            <div class="flex justify-center space-x-6 mt-6">
+                <div class="flex items-center text-gray-600">
+                    <i class="fas fa-clock mr-2"></i>
+                    <span>7-10 minutes</span>
+                </div>
+                <div class="flex items-center text-gray-600">
+                    <i class="fas fa-muscle mr-2"></i>
+                    <span>Muscle Relaxation</span>
+                </div>
+                <div class="flex items-center text-gray-600">
+                    <i class="fas fa-bed mr-2"></i>
+                    <span>Reduces Tension</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <!-- Left Column - PMR Guide -->
+            <div class="bg-white rounded-2xl shadow-lg p-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">🔋 PMR Practice</h2>
+                
+                <!-- Current Muscle Group -->
+                <div class="text-center mb-8">
+                    <div id="muscleDisplay" class="bg-teal-50 rounded-2xl p-6 border-2 border-teal-200">
+                        <div id="muscleIcon" class="text-4xl mb-4">👣</div>
+                        <h3 id="muscleGroup" class="text-xl font-bold text-teal-800 mb-2">Feet & Toes</h3>
+                        <p id="muscleInstruction" class="text-teal-700">Get ready to tense this muscle group</p>
+                    </div>
+                </div>
+
+                <!-- Timer & Phase -->
+                <div class="text-center mb-8">
+                    <div class="text-4xl font-bold text-teal-600 mb-2" id="phaseTimer">05</div>
+                    <div id="phaseText" class="text-lg text-gray-600">Get Ready</div>
+                    <div id="phaseDescription" class="text-sm text-gray-500 mt-1">Tense for 5 seconds, then release</div>
+                </div>
+
+                <!-- Controls -->
+                <div class="text-center space-y-4">
+                    <button onclick="startPMR()" id="startBtn" class="w-full bg-teal-500 text-white py-4 rounded-xl font-semibold text-lg hover:bg-teal-600 transition">
+                        <i class="fas fa-play mr-2"></i>Start Relaxation
+                    </button>
+                    <button onclick="nextMuscle()" id="nextBtn" class="w-full bg-green-500 text-white py-3 rounded-xl font-semibold hover:bg-green-600 transition hidden">
+                        <i class="fas fa-arrow-right mr-2"></i>Next Muscle Group
+                    </button>
+                </div>
+
+                <!-- Progress -->
+                <div class="mt-8">
+                    <div class="flex justify-between text-sm text-gray-600 mb-2">
+                        <span>Muscle Groups</span>
+                        <span id="progressText">0/8</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div id="progressBar" class="bg-teal-500 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column - Muscle Groups -->
+            <div class="space-y-6">
+                <!-- Benefits -->
+                <div class="bg-teal-50 rounded-2xl p-6">
+                    <h3 class="text-xl font-bold text-teal-800 mb-4">💫 Benefits</h3>
+                    <div class="grid grid-cols-1 gap-3">
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-check-circle text-teal-500"></i>
+                            <span class="text-teal-700">Releases deep muscle tension</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-check-circle text-teal-500"></i>
+                            <span class="text-teal-700">Reduces physical anxiety symptoms</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-check-circle text-teal-500"></i>
+                            <span class="text-teal-700">Improves sleep quality</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-check-circle text-teal-500"></i>
+                            <span class="text-teal-700">Increases body awareness</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Muscle Sequence -->
+                <div class="bg-white rounded-2xl shadow-lg p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">💪 Muscle Sequence</h3>
+                    <div class="space-y-4">
+                        <div class="muscle-card p-4 border-2 border-gray-100 rounded-xl" id="muscle1">
+                            <div class="flex items-center space-x-4">
+                                <div class="text-2xl">👣</div>
+                                <div>
+                                    <h4 class="font-semibold">Feet & Toes</h4>
+                                    <p class="text-sm text-gray-600">Curl toes and tense feet</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="muscle-card p-4 border-2 border-gray-100 rounded-xl opacity-50" id="muscle2">
+                            <div class="flex items-center space-x-4">
+                                <div class="text-2xl">🦵</div>
+                                <div>
+                                    <h4 class="font-semibold">Legs</h4>
+                                    <p class="text-sm text-gray-600">Tense calves and thighs</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="muscle-card p-4 border-2 border-gray-100 rounded-xl opacity-50" id="muscle3">
+                            <div class="flex items-center space-x-4">
+                                <div class="text-2xl">🍑</div>
+                                <div>
+                                    <h4 class="font-semibold">Glutes</h4>
+                                    <p class="text-sm text-gray-600">Squeeze buttocks</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="muscle-card p-4 border-2 border-gray-100 rounded-xl opacity-50" id="muscle4">
+                            <div class="flex items-center space-x-4">
+                                <div class="text-2xl">🫁</div>
+                                <div>
+                                    <h4 class="font-semibold">Stomach</h4>
+                                    <p class="text-sm text-gray-600">Tighten abdominal muscles</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="muscle-card p-4 border-2 border-gray-100 rounded-xl opacity-50" id="muscle5">
+                            <div class="flex items-center space-x-4">
+                                <div class="text-2xl">🤲</div>
+                                <div>
+                                    <h4 class="font-semibold">Hands & Arms</h4>
+                                    <p class="text-sm text-gray-600">Clench fists, tense arms</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="muscle-card p-4 border-2 border-gray-100 rounded-xl opacity-50" id="muscle6">
+                            <div class="flex items-center space-x-4">
+                                <div class="text-2xl">🧔</div>
+                                <div>
+                                    <h4 class="font-semibold">Shoulders</h4>
+                                    <p class="text-sm text-gray-600">Shrug shoulders up</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="muscle-card p-4 border-2 border-gray-100 rounded-xl opacity-50" id="muscle7">
+                            <div class="flex items-center space-x-4">
+                                <div class="text-2xl">😬</div>
+                                <div>
+                                    <h4 class="font-semibold">Face</h4>
+                                    <p class="text-sm text-gray-600">Scrunch facial muscles</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="muscle-card p-4 border-2 border-gray-100 rounded-xl opacity-50" id="muscle8">
+                            <div class="flex items-center space-x-4">
+                                <div class="text-2xl">👤</div>
+                                <div>
+                                    <h4 class="font-semibold">Full Body</h4>
+                                    <p class="text-sm text-gray-600">Tense everything, then release</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Completion -->
+                <div class="text-center">
+                    <button onclick="completeExercise()" class="bg-green-500 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-green-600 transition">
+                        ✅ I've Completed This Exercise
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const muscleGroups = [
+            { group: "Feet & Toes", icon: "👣", instruction: "Curl your toes and tense your feet", tense: "Tense feet and toes", relax: "Release and feel the relaxation" },
+            { group: "Legs", icon: "🦵", instruction: "Tense your calves and thigh muscles", tense: "Tense leg muscles", relax: "Release and feel heavy" },
+            { group: "Glutes", icon: "🍑", instruction: "Squeeze your buttocks together", tense: "Tense glutes", relax: "Release and sink down" },
+            { group: "Stomach", icon: "🫁", instruction: "Tighten your abdominal muscles", tense: "Tense stomach", relax: "Release and breathe deeply" },
+            { group: "Hands & Arms", icon: "🤲", instruction: "Clench fists and tense your arms", tense: "Tense hands and arms", relax: "Release and feel limp" },
+            { group: "Shoulders", icon: "🧔", instruction: "Shrug your shoulders up to ears", tense: "Tense shoulders", relax: "Release and drop down" },
+            { group: "Face", icon: "😬", instruction: "Scrunch up your entire face", tense: "Tense facial muscles", relax: "Release and smooth out" },
+            { group: "Full Body", icon: "👤", instruction: "Tense your entire body at once", tense: "Tense everything!", relax: "COMPLETE RELEASE!" }
+        ];
+
+        let currentMuscle = 0;
+        let isTensing = false;
+        let phaseTimer;
+        let timeLeft = 5;
+
+        function startPMR() {
+            document.getElementById('startBtn').classList.add('hidden');
+            document.getElementById('nextBtn').classList.remove('hidden');
+            startTensingPhase();
+        }
+
+        function startTensingPhase() {
+            isTensing = true;
+            const muscle = muscleGroups[currentMuscle];
+            
+            document.getElementById('muscleIcon').textContent = muscle.icon;
+            document.getElementById('muscleGroup').textContent = muscle.group;
+            document.getElementById('muscleInstruction').textContent = muscle.tense;
+            document.getElementById('phaseText').textContent = "TENSE";
+            document.getElementById('phaseDescription').textContent = "Hold the tension for 5 seconds";
+            document.getElementById('muscleDisplay').classList.add('bg-red-50', 'border-red-200');
+            document.getElementById('muscleDisplay').classList.remove('bg-teal-50', 'border-teal-200');
+            
+            // Highlight current muscle card
+            document.getElementById(`muscle${currentMuscle + 1}`).classList.add('tensing');
+            document.getElementById(`muscle${currentMuscle + 1}`).classList.remove('opacity-50');
+            
+            timeLeft = 5;
+            startPhaseTimer();
+        }
+
+        function startRelaxingPhase() {
+            isTensing = false;
+            const muscle = muscleGroups[currentMuscle];
+            
+            document.getElementById('muscleInstruction').textContent = muscle.relax;
+            document.getElementById('phaseText').textContent = "RELAX";
+            document.getElementById('phaseDescription').textContent = "Feel the relaxation for 10 seconds";
+            document.getElementById('muscleDisplay').classList.add('bg-green-50', 'border-green-200');
+            document.getElementById('muscleDisplay').classList.remove('bg-red-50', 'border-red-200');
+            
+            // Update muscle card
+            document.getElementById(`muscle${currentMuscle + 1}`).classList.remove('tensing');
+            document.getElementById(`muscle${currentMuscle + 1}`).classList.add('relaxing');
+            
+            timeLeft = 10;
+            startPhaseTimer();
+        }
+
+        function startPhaseTimer() {
+            clearInterval(phaseTimer);
+            updatePhaseTimer();
+            
+            phaseTimer = setInterval(() => {
+                timeLeft--;
+                updatePhaseTimer();
+                
+                if (timeLeft <= 0) {
+                    clearInterval(phaseTimer);
+                    if (isTensing) {
+                        startRelaxingPhase();
+                    } else {
+                        if (currentMuscle < muscleGroups.length - 1) {
+                            document.getElementById('nextBtn').classList.remove('hidden');
+                        } else {
+                            completePMR();
+                        }
+                    }
+                }
+            }, 1000);
+        }
+
+        function updatePhaseTimer() {
+            document.getElementById('phaseTimer').textContent = timeLeft.toString().padStart(2, '0');
+        }
+
+        function nextMuscle() {
+            document.getElementById('nextBtn').classList.add('hidden');
+            currentMuscle++;
+            updateProgress();
+            
+            if (currentMuscle < muscleGroups.length) {
+                startTensingPhase();
+            }
+        }
+
+        function updateProgress() {
+            const progress = ((currentMuscle + 1) / muscleGroups.length) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+            document.getElementById('progressText').textContent = `${currentMuscle + 1}/${muscleGroups.length}`;
+        }
+
+        function completePMR() {
+            document.getElementById('muscleIcon').textContent = "✨";
+            document.getElementById('muscleGroup').textContent = "PMR Complete";
+            document.getElementById('muscleInstruction').textContent = "Notice the deep relaxation throughout your body";
+            document.getElementById('phaseText').textContent = "COMPLETE";
+            document.getElementById('phaseDescription').textContent = "Well done!";
+            document.getElementById('progressBar').style.width = "100%";
+        }
+
+        function completeExercise() {
+            if (confirm('🎉 Excellent muscle relaxation practice!\n\nThis technique can significantly reduce physical anxiety.')) {
+                window.location.href = 'exercises.html';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                const user = JSON.parse(savedUser);
+                document.getElementById('username').textContent = user.username;
+            }
+            updateProgress();
+        });
+    </script>
+</body>
+</html>

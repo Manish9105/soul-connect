@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat - Soul Connect</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .user-message { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .bot-message { background: #f8fafc; }
+        .message-enter { animation: slideIn 0.3s ease-out; }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation (same as index.html) -->
+    <nav class="gradient-bg text-white shadow-lg">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-heart text-2xl"></i>
+                    <h1 class="text-2xl font-bold">Soul Connect</h1>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="index.html" class="hover:text-purple-200">Home</a>
+                    <a href="chat.html" class="font-semibold border-b-2">Chat</a>
+                    <a href="exercises.html" class="hover:text-purple-200">Exercises</a>
+                    <a href="doctors.html" class="hover:text-purple-200">Find Doctors</a>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <span id="username" class="font-semibold">User</span>
+                    <button onclick="logout()" class="bg-white text-purple-600 px-4 py-2 rounded-lg font-semibold hover:bg-purple-50">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Chat Interface -->
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <!-- Chat Header -->
+            <div class="gradient-bg text-white p-6">
+                <h2 class="text-2xl font-bold">💬 Chat with Soul Connect</h2>
+                <p class="opacity-90">Your compassionate AI mental health companion</p>
+            </div>
+
+            <!-- Chat Messages -->
+            <div id="chatContainer" class="h-96 overflow-y-auto p-6 space-y-4 bg-gray-50">
+                <!-- Messages will be added here dynamically -->
+                <div class="text-center text-gray-500 py-8">
+                    <i class="fas fa-comments text-4xl mb-4"></i>
+                    <p>Start a conversation by typing a message below...</p>
+                </div>
+            </div>
+
+            <!-- Chat Input -->
+            <div class="border-t border-gray-200 p-6">
+                <div class="flex space-x-4">
+                    <input 
+                        type="text" 
+                        id="messageInput"
+                        placeholder="Type your message here..." 
+                        class="flex-1 border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        onkeypress="handleKeyPress(event)"
+                    >
+                    <button 
+                        onclick="sendMessage()"
+                        class="bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-700 transition"
+                    >
+                        Send <i class="fas fa-paper-plane ml-2"></i>
+                    </button>
+                </div>
+                
+                <!-- Quick Action Buttons -->
+                <div class="flex flex-wrap gap-2 mt-4">
+                    <button onclick="quickMessage('I feel anxious today')" class="bg-blue-100 text-blue-700 px-3 py-2 rounded-lg text-sm hover:bg-blue-200 transition">
+                        😰 I feel anxious
+                    </button>
+                    <button onclick="quickMessage('I am feeling sad')" class="bg-purple-100 text-purple-700 px-3 py-2 rounded-lg text-sm hover:bg-purple-200 transition">
+                        😔 I feel sad
+                    </button>
+                    <button onclick="quickMessage('I need coping strategies')" class="bg-green-100 text-green-700 px-3 py-2 rounded-lg text-sm hover:bg-green-200 transition">
+                        🧠 Coping strategies
+                    </button>
+                    <button onclick="quickMessage('I want to try an exercise')" class="bg-orange-100 text-orange-700 px-3 py-2 rounded-lg text-sm hover:bg-orange-200 transition">
+                        💪 Exercise suggestion
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+           const savedUser = localStorage.getItem('currentUser');
+           if (!savedUser) {
+              window.location.href = 'index.html';
+               return;
+            }
+    
+           const user = JSON.parse(savedUser);
+            document.getElementById('username').textContent = user.username;
+        });
+
+
+
+
+        let chatHistory = [];
+
+        // Load user data
+        function loadUser() {
+            const username = localStorage.getItem('username');
+            if (username) {
+                document.getElementById('username').textContent = username;
+            }
+        }
+
+        // Send message to backend (SAME API CALL as Streamlit)
+        async function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+
+            // Add user message to UI
+            addMessageToChat('user', message);
+            input.value = '';
+
+            // Show typing indicator
+            showTypingIndicator();
+
+            try {
+                const sessionId = localStorage.getItem('session_id');
+                
+                const response = await fetch('http://localhost:8080/send-message', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        session_id: sessionId,
+                        message_text: message,
+                        sender_type: 'user'
+                    })
+                });
+
+                const data = await response.json();
+                
+                // Remove typing indicator
+                removeTypingIndicator();
+                
+                // Add bot response to UI
+                addMessageToChat('bot', data.bot_response);
+                
+                // Store in history
+                chatHistory.push({
+                    user: message,
+                    bot: data.bot_response,
+                    emotion: data.emotion,
+                    timestamp: new Date()
+                });
+
+            } catch (error) {
+                console.error('Error sending message:', error);
+                removeTypingIndicator();
+                addMessageToChat('bot', 'Sorry, I encountered an error. Please try again.');
+            }
+        }
+
+        function quickMessage(message) {
+            document.getElementById('messageInput').value = message;
+            sendMessage();
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function addMessageToChat(sender, message) {
+            const chatContainer = document.getElementById('chatContainer');
+            
+            // Remove initial placeholder if it exists
+            const placeholder = chatContainer.querySelector('.text-center');
+            if (placeholder) {
+                placeholder.remove();
+            }
+
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message-enter max-w-3/4 ${sender === 'user' ? 'ml-auto' : 'mr-auto'}`;
+            
+            messageDiv.innerHTML = `
+                <div class="${sender === 'user' ? 'user-message text-white' : 'bot-message text-gray-800'} rounded-2xl p-4 shadow-sm">
+                    <div class="flex items-start space-x-3">
+                        ${sender === 'bot' ? '<i class="fas fa-robot text-lg mt-1"></i>' : ''}
+                        <div class="flex-1">
+                            <p class="leading-relaxed">${message}</p>
+                            <div class="text-xs opacity-70 mt-2 ${sender === 'user' ? 'text-white' : 'text-gray-500'}">
+                                ${new Date().toLocaleTimeString()}
+                            </div>
+                        </div>
+                        ${sender === 'user' ? '<i class="fas fa-user text-lg mt-1"></i>' : ''}
+                    </div>
+                </div>
+            `;
+
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            const chatContainer = document.getElementById('chatContainer');
+            const typingDiv = document.createElement('div');
+            typingDiv.id = 'typingIndicator';
+            typingDiv.className = 'mr-auto max-w-3/4 message-enter';
+            
+            typingDiv.innerHTML = `
+                <div class="bot-message text-gray-800 rounded-2xl p-4 shadow-sm">
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-robot text-lg"></i>
+                        <div class="flex space-x-1">
+                            <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                            <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+                            <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            chatContainer.appendChild(typingDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function removeTypingIndicator() {
+            const typingIndicator = document.getElementById('typingIndicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        }
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = 'index.html';
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', loadUser);
+    </script>
+</body>
+</html>

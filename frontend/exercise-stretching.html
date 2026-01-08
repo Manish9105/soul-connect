@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gentle Stretching - Soul Connect</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .stretch-card { transition: all 0.3s ease; }
+        .stretch-card.active { 
+            border-color: #f59e0b;
+            background: #fffbeb;
+        }
+        .timer-circle {
+            width: 120px;
+            height: 120px;
+            border: 8px solid #f59e0b;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #f59e0b;
+        }
+        @keyframes stretch {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .stretch-animation {
+            animation: stretch 2s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="gradient-bg text-white shadow-lg">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <a href="exercises.html" class="flex items-center space-x-3">
+                        <i class="fas fa-arrow-left"></i>
+                        <i class="fas fa-heart text-2xl"></i>
+                        <h1 class="text-2xl font-bold">Soul Connect</h1>
+                    </a>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="index.html" class="hover:text-purple-200">Home</a>
+                    <a href="chat.html" class="hover:text-purple-200">Chat</a>
+                    <a href="exercises.html" class="hover:text-purple-200">Exercises</a>
+                    <a href="doctors.html" class="hover:text-purple-200">Doctors</a>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <span id="username" class="font-semibold">User</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Exercise Content -->
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        <!-- Header -->
+        <div class="text-center mb-12">
+            <div class="inline-flex items-center justify-center w-20 h-20 bg-orange-100 rounded-2xl mb-4">
+                <i class="fas fa-running text-3xl text-orange-500"></i>
+            </div>
+            <h1 class="text-4xl font-bold text-gray-800 mb-4">Gentle Stretching Routine</h1>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">Release physical tension and stress stored in your muscles</p>
+            
+            <div class="flex justify-center space-x-6 mt-6">
+                <div class="flex items-center text-gray-600">
+                    <i class="fas fa-clock mr-2"></i>
+                    <span>5-7 minutes</span>
+                </div>
+                <div class="flex items-center text-gray-600">
+                    <i class="fas fa-muscle mr-2"></i>
+                    <span>Releases Tension</span>
+                </div>
+                <div class="flex items-center text-gray-600">
+                    <i class="fas fa-heartbeat mr-2"></i>
+                    <span>Improves Circulation</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <!-- Left Column - Stretching Timer & Guide -->
+            <div class="bg-white rounded-2xl shadow-lg p-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">💪 Stretch Guide</h2>
+                
+                <!-- Current Stretch Display -->
+                <div class="text-center mb-8">
+                    <div id="stretchDisplay" class="bg-orange-50 rounded-2xl p-6 border-2 border-orange-200">
+                        <div id="stretchIcon" class="text-4xl mb-4">🔄</div>
+                        <h3 id="stretchTitle" class="text-xl font-bold text-orange-800 mb-2">Neck Rolls</h3>
+                        <p id="stretchDescription" class="text-orange-700">Slowly roll your head in circles</p>
+                    </div>
+                </div>
+
+                <!-- Timer -->
+                <div class="text-center mb-8">
+                    <div class="timer-circle mx-auto mb-4">
+                        <span id="stretchTimer">15</span>
+                    </div>
+                    <p id="timerStatus" class="text-gray-600">Seconds remaining</p>
+                </div>
+
+                <!-- Stretch Image -->
+                <div class="mb-6">
+                    <img id="stretchImage" src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=300&fit=crop" 
+                         alt="Stretch demonstration" class="w-full rounded-xl shadow-md">
+                </div>
+
+                <!-- Controls -->
+                <div class="text-center space-y-4">
+                    <button onclick="startStretching()" id="startBtn" class="w-full bg-orange-500 text-white py-4 rounded-xl font-semibold text-lg hover:bg-orange-600 transition">
+                        <i class="fas fa-play mr-2"></i>Start Stretching
+                    </button>
+                    <button onclick="nextStretch()" id="nextBtn" class="w-full bg-green-500 text-white py-3 rounded-xl font-semibold hover:bg-green-600 transition hidden">
+                        <i class="fas fa-arrow-right mr-2"></i>Next Stretch
+                    </button>
+                    <button onclick="resetStretching()" class="w-full bg-gray-500 text-white py-3 rounded-xl font-semibold hover:bg-gray-600 transition">
+                        <i class="fas fa-redo mr-2"></i>Restart Routine
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right Column - Stretching Program -->
+            <div class="space-y-6">
+                <!-- Benefits -->
+                <div class="bg-orange-50 rounded-2xl p-6">
+                    <h3 class="text-xl font-bold text-orange-800 mb-4">💫 Benefits</h3>
+                    <div class="grid grid-cols-1 gap-3">
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-check-circle text-orange-500"></i>
+                            <span class="text-orange-700">Releases muscle tension and stress</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-check-circle text-orange-500"></i>
+                            <span class="text-orange-700">Improves blood circulation</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-check-circle text-orange-500"></i>
+                            <span class="text-orange-700">Reduces physical anxiety symptoms</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-check-circle text-orange-500"></i>
+                            <span class="text-orange-700">Enhances body awareness</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stretching Routine -->
+                <div class="bg-white rounded-2xl shadow-lg p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">📋 Stretching Routine</h3>
+                    <div class="space-y-4">
+                        <!-- Neck Rolls -->
+                        <div class="stretch-card p-4 border-2 border-gray-100 rounded-xl" id="stretch1">
+                            <div class="flex items-start space-x-4">
+                                <div class="flex-shrink-0 w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center font-semibold">1</div>
+                                <div class="flex-1">
+                                    <h4 class="font-semibold text-gray-800">Neck Rolls</h4>
+                                    <p class="text-gray-600 mt-1">Slowly roll your head in circles - 5 times each direction</p>
+                                    <div class="mt-3 grid grid-cols-2 gap-2">
+                                        <img src="https://artimg.gympik.com/articles/wp-content/uploads/2019/03/Verywell-1-3567200-NeckRoll0-1379-5991bc7503f4020011a3d513.gif" alt="Neck stretch" class="rounded-lg">
+                                       <!-- <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=200&h=150&fit=crop" alt="Neck mobility" class="rounded-lg"> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Shoulder Stretches -->
+                        <div class="stretch-card p-4 border-2 border-gray-100 rounded-xl opacity-50" id="stretch2">
+                            <div class="flex items-start space-x-4">
+                                <div class="flex-shrink-0 w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-semibold">2</div>
+                                <div class="flex-1">
+                                    <h4 class="font-semibold text-gray-800">Shoulder Stretches</h4>
+                                    <p class="text-gray-600 mt-1">Cross arms and hold each side for 15 seconds</p>
+                                    <div class="mt-3 grid grid-cols-2 gap-2">
+                                        <img src="https://media.post.rvohealth.io/wp-content/uploads/sites/2/2021/02/400x400_9_Stretches_to_Benefit_Your_Golf_Game_Shoulder_Swing_Stretch.gif" alt="Shoulder stretch" class="rounded-lg">
+                                        <!-- <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=200&h=150&fit=crop" alt="Arm cross" class="rounded-lg"> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Side Stretches -->
+                        <div class="stretch-card p-4 border-2 border-gray-100 rounded-xl opacity-50" id="stretch3">
+                            <div class="flex items-start space-x-4">
+                                <div class="flex-shrink-0 w-8 h-8 bg-purple-500 text-white rounded-full flex items-center justify-center font-semibold">3</div>
+                                <div class="flex-1">
+                                    <h4 class="font-semibold text-gray-800">Side Stretches</h4>
+                                    <p class="text-gray-600 mt-1">Reach overhead to each side, hold for 15 seconds</p>
+                                    <div class="mt-3 grid grid-cols-2 gap-2">
+                                        <img src= "https://i.pinimg.com/originals/2f/99/0c/2f990cb1c506615126817ff60fb4601e.gif" alt="Side stretch" class="rounded-lg">
+                                        <!-- <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=200&h=150&fit=crop" alt="Lateral stretch" class="rounded-lg"> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Forward Fold -->
+                        <div class="stretch-card p-4 border-2 border-gray-100 rounded-xl opacity-50" id="stretch4">
+                            <div class="flex items-start space-x-4">
+                                <div class="flex-shrink-0 w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center font-semibold">4</div>
+                                <div class="flex-1">
+                                    <h4 class="font-semibold text-gray-800">Forward Fold</h4>
+                                    <p class="text-gray-600 mt-1">Bend forward gently, hold for 20 seconds</p>
+                                    <div class="mt-3 grid grid-cols-2 gap-2">
+                                        <img src="https://images.squarespace-cdn.com/content/v1/52e3481ee4b0ce534c3c4ac8/756a8026-a771-4a61-aaf8-0bf3c89b33fa/forward+fold+up.gif" alt="Forward fold" class="rounded-lg">
+                                        <img src="https://media.post.rvohealth.io/wp-content/uploads/2024/09/How_to_Put_Your_Leg_Behind_Your_Head_8_Steps_to_Get_You_There_Seated_Forward_Bend.gif" alt="Bend forward" class="rounded-lg">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Chest Opener -->
+                        <div class="stretch-card p-4 border-2 border-gray-100 rounded-xl opacity-50" id="stretch5">
+                            <div class="flex items-start space-x-4">
+                                <div class="flex-shrink-0 w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center font-semibold">5</div>
+                                <div class="flex-1">
+                                    <h4 class="font-semibold text-gray-800">Chest Opener</h4>
+                                    <p class="text-gray-600 mt-1">Clasp hands behind back, hold for 15 seconds</p>
+                                    <div class="mt-3 grid grid-cols-2 gap-2">
+                                        <img src="https://cdn.jefit.com/assets/img/exercises/gifs/846.gif" alt="Chest opener" class="rounded-lg">
+                                        <!-- <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=200&h=150&fit=crop" alt="Back clasp" class="rounded-lg"> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Completion -->
+                <div class="text-center">
+                    <button onclick="completeExercise()" class="bg-green-500 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-green-600 transition">
+                        ✅ I've Completed This Exercise
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const stretches = [
+            {
+                id: 1,
+                title: "Neck Rolls",
+                icon: "🔄",
+                description: "Slowly roll your head in circles",
+                duration: 15,
+                images: [
+                    "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=300&fit=crop",
+                    "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&h=300&fit=crop"
+                ],
+                instructions: "Gently roll your head in clockwise circles 5 times, then counter-clockwise 5 times. Move slowly and breathe deeply."
+            },
+            {
+                id: 2,
+                title: "Shoulder Stretches",
+                icon: "💪",
+                description: "Cross arms and hold each side",
+                duration: 15,
+                images: [
+                    "https://images.unsplash.com/photo-1548602088-9d812e4167ed?w=400&h=300&fit=crop",
+                    "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop"
+                ],
+                instructions: "Bring one arm across your chest, use the other arm to gently pull. Hold for 15 seconds each side."
+            },
+            {
+                id: 3,
+                title: "Side Stretches", 
+                icon: "↔️",
+                description: "Reach overhead to each side",
+                duration: 15,
+                images: [
+                    "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=300&fit=crop",
+                    "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&h=300&fit=crop"
+                ],
+                instructions: "Reach one arm overhead and lean to the opposite side. Feel the stretch along your side. Hold 15 seconds each side."
+            },
+            {
+                id: 4,
+                title: "Forward Fold",
+                icon: "👇",
+                description: "Bend forward gently",
+                duration: 20,
+                images: [
+                    "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop",
+                    "https://images.unsplash.com/photo-1548602088-9d812e4167ed?w=400&h=300&fit=crop"
+                ],
+                instructions: "Stand with feet hip-width apart, slowly bend forward from hips. Let your head and arms hang heavy."
+            },
+            {
+                id: 5,
+                title: "Chest Opener",
+                icon: "🏋️",
+                description: "Clasp hands behind back",
+                duration: 15,
+                images: [
+                    "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=300&fit=crop",
+                    "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&h=300&fit=crop"
+                ],
+                instructions: "Clasp hands behind your back, gently pull shoulders back and down. Open your chest and breathe deeply."
+            }
+        ];
+
+        let currentStretch = 0;
+        let timerInterval;
+        let timeLeft;
+
+        function updateStretchDisplay() {
+            const stretch = stretches[currentStretch];
+            
+            document.getElementById('stretchIcon').textContent = stretch.icon;
+            document.getElementById('stretchTitle').textContent = stretch.title;
+            document.getElementById('stretchDescription').textContent = stretch.description;
+            document.getElementById('stretchTimer').textContent = stretch.duration;
+            document.getElementById('stretchImage').src = stretch.images[0];
+            document.getElementById('timerStatus').textContent = "Ready to start";
+            
+            // Update stretch cards
+            document.querySelectorAll('.stretch-card').forEach((card, index) => {
+                if (index === currentStretch) {
+                    card.classList.add('active');
+                    card.classList.remove('opacity-50');
+                } else if (index < currentStretch) {
+                    card.classList.remove('active', 'opacity-50');
+                } else {
+                    card.classList.add('opacity-50');
+                    card.classList.remove('active');
+                }
+            });
+
+            // Update button visibility
+            if (currentStretch > 0) {
+                document.getElementById('nextBtn').classList.remove('hidden');
+            } else {
+                document.getElementById('nextBtn').classList.add('hidden');
+            }
+        }
+
+        function startStretching() {
+            const stretch = stretches[currentStretch];
+            timeLeft = stretch.duration;
+            
+            document.getElementById('startBtn').classList.add('hidden');
+            document.getElementById('nextBtn').classList.remove('hidden');
+            document.getElementById('timerStatus').textContent = "Hold the stretch...";
+            
+            // Start timer
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                document.getElementById('stretchTimer').textContent = timeLeft;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    document.getElementById('timerStatus').textContent = "Stretch complete!";
+                    document.getElementById('stretchIcon').classList.add('stretch-animation');
+                }
+            }, 1000);
+        }
+
+        function nextStretch() {
+            clearInterval(timerInterval);
+            document.getElementById('stretchIcon').classList.remove('stretch-animation');
+            
+            if (currentStretch < stretches.length - 1) {
+                currentStretch++;
+                updateStretchDisplay();
+                document.getElementById('startBtn').classList.remove('hidden');
+                document.getElementById('nextBtn').classList.add('hidden');
+            } else {
+                completeExercise();
+            }
+        }
+
+        function resetStretching() {
+            clearInterval(timerInterval);
+            currentStretch = 0;
+            document.getElementById('stretchIcon').classList.remove('stretch-animation');
+            document.getElementById('startBtn').classList.remove('hidden');
+            document.getElementById('nextBtn').classList.add('hidden');
+            updateStretchDisplay();
+        }
+
+        function completeExercise() {
+            if (confirm('🎉 Great job completing the stretching routine!\n\nRegular stretching can help reduce physical tension and stress.')) {
+                // Here you can save completion to backend
+                window.location.href = 'exercises.html';
+            }
+        }
+
+        // Load user and initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                const user = JSON.parse(savedUser);
+                document.getElementById('username').textContent = user.username;
+            }
+            updateStretchDisplay();
+        });
+    </script>
+</body>
+</html>

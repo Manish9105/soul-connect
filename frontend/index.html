@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soul Connect - Mental Health Support</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .login-box {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+        .option-card {
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        .option-card:hover {
+            transform: translateY(-5px);
+            border-color: #667eea;
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.2);
+        }
+        .option-card.selected {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #f8faff 0%, #f0f4ff 100%);
+        }
+        
+        /* 3D Animation Styles */
+        .floating {
+            animation: floating 6s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0% { transform: translate(0, 0px) rotateY(0deg); }
+            50% { transform: translate(0, -15px) rotateY(5deg); }
+            100% { transform: translate(0, 0px) rotateY(0deg); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .fade-in {
+            animation: fadeIn 1s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .slide-in-left {
+            animation: slideInLeft 1s ease-out;
+        }
+        
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .slide-in-right {
+            animation: slideInRight 1s ease-out;
+        }
+        
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .bounce-in {
+            animation: bounceIn 1s;
+        }
+        
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); opacity: 0.9; }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .rotate-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .rotate-3d:hover {
+            transform: rotateY(15deg) rotateX(5deg);
+        }
+        
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        /* 3D Scene Container */
+        #threeScene {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.7;
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen overflow-x-hidden">
+    <!-- 3D Background Scene -->
+    <div id="threeScene"></div>
+    
+    <!-- Login Page (Shown by default) -->
+    <div id="loginPage">
+        <div class="min-h-screen gradient-bg flex items-center justify-center p-4 relative">
+            <!-- Floating particles -->
+            <div id="particlesContainer" class="absolute inset-0 overflow-hidden"></div>
+            
+            <div class="login-box w-full max-w-4xl overflow-hidden floating relative z-10">
+                <!-- Header -->
+                <div class="gradient-bg text-white text-center p-8 relative overflow-hidden">
+                    <div class="absolute inset-0 opacity-20">
+                        <div class="absolute top-0 left-0 w-20 h-20 bg-white rounded-full filter blur-xl"></div>
+                        <div class="absolute bottom-0 right-0 w-32 h-32 bg-purple-300 rounded-full filter blur-xl"></div>
+                    </div>
+                    <h1 class="text-4xl font-bold mb-4 bounce-in">Soul Connect</h1>
+                    <p class="text-xl opacity-90 fade-in">AI-Powered Mental Health Support • Connecting Minds, Healing Hearts</p>
+                </div>
+
+                <!-- Login Options -->
+                <div class="p-8">
+                    <div class="text-center mb-8">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-2 slide-in-left"> Welcome to Soul Connect</h2>
+                        <p class="text-gray-600 slide-in-right">Choose your login method to begin</p>
+                    </div>
+
+                    <!-- Login Options Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <!-- Anonymous Login -->
+                        <div class="option-card p-6 rounded-2xl bg-white cursor-pointer rotate-3d" onclick="selectOption('anonymous')" id="anonymousOption">
+                            <div class="text-center">
+                                <i class="fas fa-user-secret text-3xl text-purple-500 mb-4 floating"></i>
+                                <h3 class="font-bold text-gray-800 mb-2"> Anonymous Guest Login</h3>
+                                <p class="text-sm text-gray-600">Private & Secure • No personal information required • Fully encrypted</p>
+                            </div>
+                        </div>
+
+                        <!-- Username Login -->
+                        <div class="option-card p-6 rounded-2xl bg-white cursor-pointer rotate-3d" onclick="selectOption('username')" id="usernameOption">
+                            <div class="text-center">
+                                <i class="fas fa-user text-3xl text-blue-500 mb-4 floating" style="animation-delay: 0.2s"></i>
+                                <h3 class="font-bold text-gray-800 mb-2"> Login with Username</h3>
+                                <p class="text-sm text-gray-600">Quick access with your existing username</p>
+                            </div>
+                        </div>
+
+                        <!-- Create Account -->
+                        <div class="option-card p-6 rounded-2xl bg-white cursor-pointer rotate-3d" onclick="selectOption('create')" id="createOption">
+                            <div class="text-center">
+                                <i class="fas fa-user-plus text-3xl text-green-500 mb-4 floating" style="animation-delay: 0.4s"></i>
+                                <h3 class="font-bold text-gray-800 mb-2"> Create New Account</h3>
+                                <p class="text-sm text-gray-600">Create permanent account for enhanced features</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Login Forms -->
+                    <div id="loginForms">
+                        <!-- Anonymous Login Form -->
+                        <div id="anonymousForm" class="hidden fade-in">
+                            <div class="bg-purple-50 p-6 rounded-2xl mb-6 glass-effect">
+                                <div class="text-center">
+                                    <i class="fas fa-shield-alt text-2xl text-purple-500 mb-3 pulse"></i>
+                                    <p class="text-purple-700 font-semibold">Your privacy is protected. No personal data is stored.</p>
+                                </div>
+                            </div>
+                            <button onclick="anonymousLogin()" class="w-full bg-purple-600 text-white py-4 rounded-xl font-semibold text-lg hover:bg-purple-700 transition card-hover">
+                                 Start Anonymous Session
+                            </button>
+                        </div>
+
+                        <!-- Username Login Form -->
+                        <div id="usernameForm" class="hidden fade-in">
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2"> Username</label>
+                                    <input type="text" id="usernameInput" placeholder="Enter your username" 
+                                           class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2"> Password</label>
+                                    <input type="password" id="passwordInput" placeholder="Enter your password"
+                                           class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+                                </div>
+                                <button onclick="usernameLogin()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-semibold text-lg hover:bg-blue-700 transition card-hover">
+                                    Login to Account
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Create Account Form -->
+                        <div id="createForm" class="hidden fade-in">
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2"> Email Address</label>
+                                    <input type="email" id="emailInput" placeholder="your.email@example.com"
+                                           class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 transition">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2"> Choose Username</label>
+                                    <input type="text" id="newUsernameInput" placeholder="Choose a username"
+                                           class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 transition">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2"> Create Password</label>
+                                    <input type="password" id="newPasswordInput" placeholder="Create a strong password"
+                                           class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 transition">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">✅ Confirm Password</label>
+                                    <input type="password" id="confirmPasswordInput" placeholder="Re-enter your password"
+                                           class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 transition">
+                                </div>
+                                <button onclick="createAccount()" class="w-full bg-green-600 text-white py-4 rounded-xl font-semibold text-lg hover:bg-green-700 transition card-hover">
+                                    Create New Account
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Privacy Notice -->
+                    <div class="text-center mt-8 pt-6 border-t border-gray-200">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600">
+                            <div class="fade-in">
+                                <p> <strong>Your privacy matters:</strong> All conversations are encrypted and secure</p>
+                            </div>
+                            <div class="fade-in" style="animation-delay: 0.2s">
+                                <p> <strong>Professional support:</strong> AI-powered with evidence-based techniques</p>
+                            </div>
+                            <div class="fade-in" style="animation-delay: 0.4s">
+                                <p> <strong>New:</strong> Real voice recording features available</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="bg-white py-16 relative overflow-hidden">
+            <!-- Background decoration -->
+            <div class="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-purple-50 to-transparent"></div>
+            
+            <div class="container mx-auto px-4 relative z-10">
+                <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 bounce-in"> Why Choose Soul Connect?</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                    <div class="text-center card-hover p-6 rounded-2xl">
+                        <i class="fas fa-brain text-4xl text-purple-500 mb-4 floating"></i>
+                        <h3 class="text-xl font-bold text-gray-800 mb-3"> 🧠AI-Powered</h3>
+                        <p class="text-gray-600">Advanced emotion detection and personalized responses</p>
+                    </div>
+                    
+                    <div class="text-center card-hover p-6 rounded-2xl">
+                        <i class="fas fa-shield-alt text-4xl text-blue-500 mb-4 floating" style="animation-delay: 0.2s"></i>
+                        <h3 class="text-xl font-bold text-gray-800 mb-3">🔏 Private</h3>
+                        <p class="text-gray-600">Anonymous sessions with end-to-end encryption</p>
+                    </div>
+                    
+                    <div class="text-center card-hover p-6 rounded-2xl">
+                        <i class="fas fa-microphone text-4xl text-green-500 mb-4 floating" style="animation-delay: 0.4s"></i>
+                        <h3 class="text-xl font-bold text-gray-800 mb-3">🎤 Voice Support</h3>
+                        <p class="text-gray-600">Real voice recording and analysis</p>
+                    </div>
+                    
+                    <div class="text-center card-hover p-6 rounded-2xl">
+                        <i class="fas fa-first-aid text-4xl text-red-500 mb-4 floating" style="animation-delay: 0.6s"></i>
+                        <h3 class="text-xl font-bold text-gray-800 mb-3">🆘 Crisis Support</h3>
+                        <p class="text-gray-600">Immediate help resources when you need them</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App (Hidden until login) -->
+    <div id="mainApp" class="hidden">
+        <!-- Navigation -->
+        <nav class="gradient-bg text-white shadow-lg sticky top-0 z-40">
+            <div class="container mx-auto px-4 py-4">
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-heart text-2xl pulse"></i>
+                        <h1 class="text-2xl font-bold">Soul Connect</h1>
+                    </div>
+                    <div class="flex space-x-6">
+                        <a href="#" onclick="showSection('dashboard')" class="hover:text-purple-200 font-semibold transition">Home</a>
+                        <a href="#" onclick="showSection('chat')" class="hover:text-purple-200 font-semibold transition">Chat</a>
+                        <a href="#" onclick="showSection('exercises')" class="hover:text-purple-200 font-semibold transition">Exercises</a>
+                        <a href="#" onclick="showSection('doctors')" class="hover:text-purple-200 font-semibold transition">Find Doctors</a>
+                         <a href="#" onclick="showSection('journal')" class="hover:text-purple-200 font-semibold">Journal</a>
+                        <a href="#" onclick="showSection('support-groups')" class="hover:text-purple-200 font-semibold">Support Groups</a>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <span id="displayUsername" class="font-semibold"></span>
+                        <span id="loginMethod" class="text-sm bg-white bg-opacity-20 px-2 py-1 rounded"></span>
+                        <button onclick="logout()" class="bg-white text-purple-600 px-4 py-2 rounded-lg font-semibold hover:bg-purple-50 transition card-hover">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Dashboard Section -->
+        <div id="dashboardSection">
+            <!-- Hero Section -->
+            <section class="gradient-bg text-white py-20 relative overflow-hidden">
+                <!-- Background elements -->
+                <div class="absolute top-0 left-0 w-full h-full opacity-10">
+                    <div class="absolute top-10 left-10 w-20 h-20 bg-white rounded-full"></div>
+                    <div class="absolute top-40 right-20 w-32 h-32 bg-purple-300 rounded-full"></div>
+                    <div class="absolute bottom-20 left-1/4 w-24 h-24 bg-blue-300 rounded-full"></div>
+                </div>
+                
+                <div class="container mx-auto px-4 text-center relative z-10">
+                    <h1 class="text-5xl font-bold mb-6 bounce-in">Your Mental Health Companion</h1>
+                    <p class="text-xl mb-8 max-w-2xl mx-auto fade-in">AI-powered support, therapeutic exercises, and professional resources - all in one safe space.</p>
+                    <div class="flex justify-center space-x-4">
+                        <button onclick="showSection('chat')" class="bg-white text-purple-600 px-8 py-3 rounded-lg font-semibold text-lg hover:bg-purple-50 transition card-hover">
+                            Start Chatting <i class="fas fa-comments ml-2"></i>
+                        </button>
+                        <button onclick="showSection('exercises')" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold text-lg hover:bg-white hover:text-purple-600 transition card-hover">
+                            Try Exercises <i class="fas fa-spa ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quick Actions -->
+            <section class="py-16 bg-white relative overflow-hidden">
+                <!-- Background decoration -->
+                <div class="absolute bottom-0 right-0 w-64 h-64 bg-purple-50 rounded-full -mr-32 -mb-32"></div>
+                
+                <div class="container mx-auto px-4 relative z-10">
+                    <h2 class="text-4xl font-bold text-center text-gray-800 mb-12 bounce-in">Quick Access</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+                        <button onclick="showSection('chat')" class="card-hover bg-white p-6 rounded-xl shadow-md text-center group border-2 border-gray-100 hover:border-purple-200">
+                            <i class="fas fa-comment-dots text-3xl text-purple-500 mb-3 group-hover:scale-110 transition floating"></i>
+                            <h3 class="font-semibold text-gray-800">Chat Now</h3>
+                        </button>
+                        
+                        <button onclick="showSection('exercises')" class="card-hover bg-white p-6 rounded-xl shadow-md text-center group border-2 border-gray-100 hover:border-red-200">
+                            <i class="fas fa-heartbeat text-3xl text-red-500 mb-3 group-hover:scale-110 transition floating" style="animation-delay: 0.2s"></i>
+                            <h3 class="font-semibold text-gray-800">Exercises</h3>
+                        </button>
+                        
+                        <button onclick="showCrisisHelp()" class="card-hover bg-white p-6 rounded-xl shadow-md text-center group border-2 border-gray-100 hover:border-orange-200">
+                            <i class="fas fa-first-aid text-3xl text-orange-500 mb-3 group-hover:scale-110 transition floating" style="animation-delay: 0.4s"></i>
+                            <h3 class="font-semibold text-gray-800">Emergency Help</h3>
+                        </button>
+                        
+                        <button onclick="showSection('doctors')" class="card-hover bg-white p-6 rounded-xl shadow-md text-center group border-2 border-gray-100 hover:border-blue-200">
+                            <i class="fas fa-hospital text-3xl text-blue-500 mb-3 group-hover:scale-110 transition floating" style="animation-delay: 0.6s"></i>
+                            <h3 class="font-semibold text-gray-800">Find Doctors</h3>
+                        </button>
+
+                         <button onclick="showSection('support-groups')" class="card-hover bg-white p-6 rounded-xl shadow-md text-center group border-2 border-gray-100 hover:border-green-200">
+                            <i class="fas fa-users text-3xl text-green-500 mb-3 group-hover:scale-110 transition"></i>
+                            <h3 class="font-semibold text-gray-800">Support Groups</h3>
+                        </button>
+
+                         
+                       <button onclick="showSection('journal')" class="card-hover bg-white p-6 rounded-xl shadow-md text-center group border-2 border-gray-100 hover:border-yellow-200">
+                           <i class="fas fa-book-open text-3xl text-yellow-500 mb-3 group-hover:scale-110 transition floating"></i>
+                           <h3 class="font-semibold text-gray-800">AI Journal</h3>
+                      </button>
+
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Other sections will be loaded from separate files -->
+        <div id="contentSection"></div>
+    </div>
+
+    <!-- Crisis Modal -->
+    <div id="crisisModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-2xl p-8 max-w-md mx-4 bounce-in">
+            <div class="text-center">
+                <i class="fas fa-exclamation-triangle text-4xl text-red-500 mb-4 pulse"></i>
+                <h3 class="text-2xl font-bold text-gray-800 mb-4">Emergency Support</h3>
+                <p class="text-gray-600 mb-6">If you're in crisis, immediate help is available:</p>
+                
+                <div class="space-y-3 text-left mb-6">
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-phone text-green-500"></i>
+                        <span class="font-semibold">Vandrevala Foundation:</span>
+                        <span>+91-9999666555</span>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-phone text-green-500"></i>
+                        <span class="font-semibold">AASRA:</span>
+                        <span>+91-9820466726</span>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-phone text-green-500"></i>
+                        <span class="font-semibold">Emergency:</span>
+                        <span>112 / 911</span>
+                    </div>
+                </div>
+                
+                <button onclick="hideCrisisModal()" class="bg-purple-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-purple-700 transition card-hover">
+                    I Understand
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+        let loginMethod = null;
+        let scene, camera, renderer, particles;
+        let particleSystem;
+
+        // Initialize Three.js scene
+        function initThreeScene() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
+            camera.position.z = 5;
+
+            renderer = new THREE.WebGLRenderer({ alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.getElementById('threeScene').appendChild(renderer.domElement);
+
+            // Create particles
+            const particleCount = 100;
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+
+            for (let i = 0; i < particleCount * 3; i += 3) {
+                positions[i] = (Math.random() - 0.5) * 10;
+                positions[i + 1] = (Math.random() - 0.5) * 10;
+                positions[i + 2] = (Math.random() - 0.5) * 10;
+
+                colors[i] = Math.random();
+                colors[i + 1] = Math.random();
+                colors[i + 2] = Math.random();
+            }
+
+            const geometry = new THREE.BufferGeometry();
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            const material = new THREE.PointsMaterial({
+                size: 0.05,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.6
+            });
+
+            particleSystem = new THREE.Points(geometry, material);
+            scene.add(particleSystem);
+
+            // Handle window resize
+            window.addEventListener('resize', onWindowResize, false);
+
+            animate();
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            if (particleSystem) {
+                particleSystem.rotation.x += 0.001;
+                particleSystem.rotation.y += 0.002;
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        // Create floating particles for login page
+        function createFloatingParticles() {
+            const container = document.getElementById('particlesContainer');
+            const colors = ['#667eea', '#764ba2', '#f093fb', '#f5576c'];
+            
+            for (let i = 0; i < 15; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                const size = Math.random() * 60 + 20;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.background = `radial-gradient(circle, ${color} 0%, transparent 70%)`;
+                particle.style.opacity = Math.random() * 0.3 + 0.1;
+                
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                
+                const duration = Math.random() * 20 + 10;
+                particle.style.animation = `floating ${duration}s ease-in-out infinite`;
+                particle.style.animationDelay = `${Math.random() * 5}s`;
+                
+                container.appendChild(particle);
+            }
+        }
+
+        // Login option selection
+        function selectOption(option) {
+            // Remove selected class from all options
+            document.querySelectorAll('.option-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+
+            // Hide all forms
+            document.querySelectorAll('#loginForms > div').forEach(form => {
+                form.classList.add('hidden');
+            });
+
+            // Show selected option and form
+            document.getElementById(option + 'Option').classList.add('selected');
+            document.getElementById(option + 'Form').classList.remove('hidden');
+        }
+
+        // Anonymous login (uses your backend API)
+        async function anonymousLogin() {
+            try {
+                const response = await fetch('http://localhost:8080/create-user', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                const data = await response.json();
+                
+                if (data.user_id) {
+                    currentUser = {
+                        id: data.user_id,
+                        username: data.anonymous_id,
+                        sessionId: data.session_id,
+                        method: 'anonymous'
+                    };
+                    
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    showMainApp();
+                }
+            } catch (error) {
+                alert('Error creating anonymous session. Please try again.');
+                console.error('Anonymous login error:', error);
+            }
+        }
+
+        // Username login (simulated for now)
+        async function usernameLogin() {
+            const username = document.getElementById('usernameInput').value.trim();
+            const password = document.getElementById('passwordInput').value;
+
+            if (!username) {
+                alert('Please enter a username');
+                return;
+            }
+
+            // For demo - in real app, you'd verify with backend
+            currentUser = {
+                id: generateId(),
+                username: username,
+                sessionId: generateId(),
+                method: 'username'
+            };
+
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            showMainApp();
+        }
+
+        // Create account (simulated for now)
+        async function createAccount() {
+            const email = document.getElementById('emailInput').value.trim();
+            const username = document.getElementById('newUsernameInput').value.trim();
+            const password = document.getElementById('newPasswordInput').value;
+            const confirmPassword = document.getElementById('confirmPasswordInput').value;
+
+            if (!username || !password) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                alert('Passwords do not match!');
+                return;
+            }
+
+            // For demo - in real app, you'd create account in backend
+            currentUser = {
+                id: generateId(),
+                username: username,
+                sessionId: generateId(),
+                method: 'new_account'
+            };
+
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            showMainApp();
+        }
+
+        // Show main application after login
+        function showMainApp() {
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('mainApp').classList.remove('hidden');
+            
+            // Update user info in navbar
+            document.getElementById('displayUsername').textContent = currentUser.username;
+            
+            const methodLabels = {
+                'anonymous': ' Anonymous',
+                'username': ' User Account', 
+                'new_account': ' New Account'
+            };
+            document.getElementById('loginMethod').textContent = methodLabels[currentUser.method];
+        }
+
+        // Navigation between sections
+         // In your main app JavaScript, add:
+function showSection(section) {
+    const contentSection = document.getElementById('contentSection');
+    
+    if (section === 'dashboard') {
+        document.getElementById('dashboardSection').classList.remove('hidden');
+        contentSection.innerHTML = '';
+    } else if (section === 'support-groups') {
+        window.location.href = 'support-groups.html';
+    
+    }
+    else if (section === 'journal') {
+    window.location.href = 'journal.html';
+    }
+    
+    
+    else {
+        document.getElementById('dashboardSection').classList.add('hidden');
+        
+        if (section === 'chat') {
+            window.location.href = 'chat.html';
+        } else if (section === 'exercises') {
+            window.location.href = 'exercises.html';
+        } else if (section === 'doctors') {
+            window.location.href = 'doctors.html';
+        }
+    }
+}
+
+        function showCrisisHelp() {
+            document.getElementById('crisisModal').classList.remove('hidden');
+            document.getElementById('crisisModal').classList.add('flex');
+        }
+
+        function hideCrisisModal() {
+            document.getElementById('crisisModal').classList.add('hidden');
+            document.getElementById('crisisModal').classList.remove('flex');
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            currentUser = null;
+            document.getElementById('mainApp').classList.add('hidden');
+            document.getElementById('loginPage').classList.remove('hidden');
+        }
+
+        function generateId() {
+            return 'user_' + Math.random().toString(36).substr(2, 9);
+        }
+
+        // Check if user is already logged in
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize 3D scene
+            initThreeScene();
+            
+            // Create floating particles
+            createFloatingParticles();
+            
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                showMainApp();
+            } else {
+                // Select anonymous by default
+                selectOption('anonymous');
+            }
+        });
+    </script>
+</body>
+</html>

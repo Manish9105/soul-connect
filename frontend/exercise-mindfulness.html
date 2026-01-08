@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Body Scan Meditation - Soul Connect</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .body-part { transition: all 0.5s ease; }
+        .body-part.active { 
+            background: linear-gradient(135deg, #a78bfa 0%, #7e22ce 100%);
+            color: white;
+            transform: scale(1.05);
+        }
+        .breath-animation {
+            animation: breathe 4s ease-in-out infinite;
+        }
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <nav class="gradient-bg text-white shadow-lg">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <a href="exercises.html" class="flex items-center space-x-3">
+                        <i class="fas fa-arrow-left"></i>
+                        <i class="fas fa-heart text-2xl"></i>
+                        <h1 class="text-2xl font-bold">Soul Connect</h1>
+                    </a>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="index.html" class="hover:text-purple-200">Home</a>
+                    <a href="chat.html" class="hover:text-purple-200">Chat</a>
+                    <a href="exercises.html" class="hover:text-purple-200">Exercises</a>
+                    <a href="doctors.html" class="hover:text-purple-200">Doctors</a>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <span id="username" class="font-semibold">User</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Audio Player -->
+    <audio id="meditationMusic" loop style="display: none;">
+        <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.wav" type="audio/wav">
+    </audio>
+
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        <div class="text-center mb-12">
+            <div class="inline-flex items-center justify-center w-20 h-20 bg-purple-100 rounded-2xl mb-4">
+                <i class="fas fa-brain text-3xl text-purple-500"></i>
+            </div>
+            <h1 class="text-4xl font-bold text-gray-800 mb-4">Body Scan Meditation</h1>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">Increase body awareness and relaxation through mindful scanning</p>
+            
+            <div class="flex justify-center space-x-6 mt-6">
+                <div class="flex items-center text-gray-600">
+                    <i class="fas fa-clock mr-2"></i>
+                    <span>5-10 minutes</span>
+                </div>
+                <div class="flex items-center text-gray-600">
+                    <i class="fas fa-spa mr-2"></i>
+                    <span>Deep Relaxation</span>
+                </div>
+                <div class="flex items-center text-gray-600">
+                    <i class="fas fa-eye mr-2"></i>
+                    <span>Body Awareness</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <!-- Left Column - Body Visualization -->
+            <div class="bg-white rounded-2xl shadow-lg p-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">🧘 Body Scan Guide</h2>
+                
+                <!-- Body Visualization -->
+                <div class="relative bg-gradient-to-b from-blue-50 to-purple-50 rounded-2xl p-8 mb-6">
+                    <div class="text-center">
+                        <div class="text-6xl mb-4 breath-animation" id="bodyIcon">👁️</div>
+                        <h3 id="bodyPart" class="text-2xl font-bold text-gray-800 mb-2">Starting Meditation</h3>
+                        <p id="bodyInstruction" class="text-gray-600">Get comfortable and close your eyes</p>
+                    </div>
+                </div>
+
+                <!-- Progress -->
+                <div class="mb-6">
+                    <div class="flex justify-between text-sm text-gray-600 mb-2">
+                        <span>Body Scan Progress</span>
+                        <span id="progressText">0%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-3">
+                        <div id="progressBar" class="bg-purple-500 h-3 rounded-full transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- Timer & Controls -->
+                <div class="text-center space-y-4">
+                    <div class="text-3xl font-bold text-purple-600 mb-4" id="meditationTimer">05:00</div>
+                    
+                    <!-- Music Toggle -->
+                    <div class="mb-4">
+                        <button onclick="toggleMusic()" id="musicBtn" class="bg-blue-500 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-600 transition">
+                            <i class="fas fa-music mr-2"></i>
+                            <span id="musicText">Play Relaxation Music</span>
+                        </button>
+                    </div>
+
+                    <!-- Main Meditation Control -->
+                    <button onclick="toggleMeditation()" id="meditationBtn" class="w-full bg-purple-500 text-white py-4 rounded-xl font-semibold text-lg hover:bg-purple-600 transition">
+                        <i class="fas fa-play mr-2"></i>Begin Meditation
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right Column - Instructions -->
+            <div class="space-y-6">
+                <!-- Benefits -->
+                <div class="bg-purple-50 rounded-2xl p-6">
+                    <h3 class="text-xl font-bold text-purple-800 mb-4">💫 Benefits</h3>
+                    <div class="grid grid-cols-1 gap-3">
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-check-circle text-purple-500"></i>
+                            <span class="text-purple-700">Reduces physical tension</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-check-circle text-purple-500"></i>
+                            <span class="text-purple-700">Increases body awareness</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-check-circle text-purple-500"></i>
+                            <span class="text-purple-700">Promotes deep relaxation</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-check-circle text-purple-500"></i>
+                            <span class="text-purple-700">Improves sleep quality</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Body Parts Guide -->
+                <div class="bg-white rounded-2xl shadow-lg p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">📋 Body Scan Sequence</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="body-part text-center p-4 bg-gray-50 rounded-xl" id="part1">
+                            <div class="text-2xl mb-2">👣</div>
+                            <div class="font-semibold">Feet & Toes</div>
+                        </div>
+                        <div class="body-part text-center p-4 bg-gray-50 rounded-xl opacity-50" id="part2">
+                            <div class="text-2xl mb-2">🦵</div>
+                            <div class="font-semibold">Legs</div>
+                        </div>
+                        <div class="body-part text-center p-4 bg-gray-50 rounded-xl opacity-50" id="part3">
+                            <div class="text-2xl mb-2">🧎</div>
+                            <div class="font-semibold">Hips & Pelvis</div>
+                        </div>
+                        <div class="body-part text-center p-4 bg-gray-50 rounded-xl opacity-50" id="part4">
+                            <div class="text-2xl mb-2">🫁</div>
+                            <div class="font-semibold">Chest & Back</div>
+                        </div>
+                        <div class="body-part text-center p-4 bg-gray-50 rounded-xl opacity-50" id="part5">
+                            <div class="text-2xl mb-2">🤲</div>
+                            <div class="font-semibold">Arms & Hands</div>
+                        </div>
+                        <div class="body-part text-center p-4 bg-gray-50 rounded-xl opacity-50" id="part6">
+                            <div class="text-2xl mb-2">👤</div>
+                            <div class="font-semibold">Neck & Head</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Completion -->
+                <div class="text-center">
+                    <button onclick="completeExercise()" class="bg-green-500 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-green-600 transition">
+                        ✅ I've Completed This Exercise
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const bodyParts = [
+            { part: "Feet & Toes", icon: "👣", instruction: "Bring awareness to your feet. Notice any sensations in your toes, soles, and heels.", duration: 30 },
+            { part: "Legs", icon: "🦵", instruction: "Move your attention to your legs. Feel your calves, shins, and thighs. Notice any tension.", duration: 30 },
+            { part: "Hips & Pelvis", icon: "🧎", instruction: "Focus on your hips and pelvis. Notice how they support your body. Release any holding.", duration: 30 },
+            { part: "Chest & Back", icon: "🫁", instruction: "Bring awareness to your chest and back. Feel your breath moving through this area.", duration: 40 },
+            { part: "Arms & Hands", icon: "🤲", instruction: "Notice your arms and hands. Feel any sensations in your fingers, palms, and shoulders.", duration: 30 },
+            { part: "Neck & Head", icon: "👤", instruction: "Finally, scan your neck and head. Release tension in your jaw, face, and scalp.", duration: 40 }
+        ];
+
+        let currentPart = 0;
+        let totalTime = 300;
+        let timeLeft = totalTime;
+        let meditationActive = false;
+        let timerInterval;
+        let musicPlaying = false;
+        const music = document.getElementById('meditationMusic');
+
+        function toggleMusic() {
+            if (musicPlaying) {
+                music.pause();
+                document.getElementById('musicText').textContent = 'Play Relaxation Music';
+                document.getElementById('musicBtn').classList.remove('bg-red-500');
+                document.getElementById('musicBtn').classList.add('bg-blue-500');
+                musicPlaying = false;
+            } else {
+                music.volume = 0.5;
+                const playPromise = music.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        document.getElementById('musicText').textContent = 'Stop Music';
+                        document.getElementById('musicBtn').classList.remove('bg-blue-500');
+                        document.getElementById('musicBtn').classList.add('bg-red-500');
+                        musicPlaying = true;
+                    }).catch(error => {
+                        console.log('Play failed:', error);
+                        alert('Please click "Play Relaxation Music" again to start the audio.');
+                    });
+                }
+            }
+        }
+
+        function toggleMeditation() {
+            if (meditationActive) {
+                pauseMeditation();
+            } else {
+                startMeditation();
+            }
+        }
+
+        function startMeditation() {
+            meditationActive = true;
+            document.getElementById('meditationBtn').innerHTML = '<i class="fas fa-pause mr-2"></i>Pause Meditation';
+            document.getElementById('meditationBtn').classList.remove('bg-purple-500');
+            document.getElementById('meditationBtn').classList.add('bg-yellow-500');
+            startBodyScan();
+        }
+
+        function pauseMeditation() {
+            meditationActive = false;
+            clearInterval(timerInterval);
+            document.getElementById('meditationBtn').innerHTML = '<i class="fas fa-play mr-2"></i>Resume Meditation';
+            document.getElementById('meditationBtn').classList.remove('bg-yellow-500');
+            document.getElementById('meditationBtn').classList.add('bg-purple-500');
+        }
+
+        function startBodyScan() {
+            updateBodyPart();
+            
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimer();
+                
+                if (timeLeft <= 0) {
+                    completeMeditation();
+                }
+                
+                if ((totalTime - timeLeft) % 50 === 0 && currentPart < bodyParts.length - 1) {
+                    currentPart++;
+                    updateBodyPart();
+                }
+            }, 1000);
+        }
+
+        function updateBodyPart() {
+            const part = bodyParts[currentPart];
+            document.getElementById('bodyIcon').textContent = part.icon;
+            document.getElementById('bodyPart').textContent = part.part;
+            document.getElementById('bodyInstruction').textContent = part.instruction;
+            
+            const progress = ((currentPart + 1) / bodyParts.length) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+            document.getElementById('progressText').textContent = `${Math.round(progress)}%`;
+            
+            document.querySelectorAll('.body-part').forEach((element, index) => {
+                if (index === currentPart) {
+                    element.classList.add('active');
+                    element.classList.remove('opacity-50');
+                } else if (index < currentPart) {
+                    element.classList.remove('active', 'opacity-50');
+                } else {
+                    element.classList.add('opacity-50');
+                    element.classList.remove('active');
+                }
+            });
+        }
+
+        function updateTimer() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById('meditationTimer').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function completeMeditation() {
+            clearInterval(timerInterval);
+            document.getElementById('bodyIcon').textContent = "✨";
+            document.getElementById('bodyPart').textContent = "Meditation Complete";
+            document.getElementById('bodyInstruction').textContent = "Take a moment to notice how your body feels";
+            document.getElementById('meditationTimer').textContent = "00:00";
+            document.getElementById('progressBar').style.width = "100%";
+            document.getElementById('progressText').textContent = "100%";
+        }
+
+        function completeExercise() {
+            if (confirm('🎉 Beautiful meditation practice!\n\nRegular body scans can deepen your mind-body connection.')) {
+                window.location.href = 'exercises.html';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                const user = JSON.parse(savedUser);
+                document.getElementById('username').textContent = user.username;
+            }
+            updateTimer();
+        });
+    </script>
+</body>
+</html>

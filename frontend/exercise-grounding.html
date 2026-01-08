@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grounding Exercise - Soul Connect</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .sense-card { transition: all 0.3s ease; }
+        .sense-card.active { 
+            transform: scale(1.05);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        .progress-step { transition: all 0.5s ease; }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="gradient-bg text-white shadow-lg">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <a href="exercises.html" class="flex items-center space-x-3">
+                        <i class="fas fa-arrow-left"></i>
+                        <i class="fas fa-heart text-2xl"></i>
+                        <h1 class="text-2xl font-bold">Soul Connect</h1>
+                    </a>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="index.html" class="hover:text-purple-200">Home</a>
+                    <a href="chat.html" class="hover:text-purple-200">Chat</a>
+                    <a href="exercises.html" class="hover:text-purple-200">Exercises</a>
+                    <a href="doctors.html" class="hover:text-purple-200">Doctors</a>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <span id="username" class="font-semibold">User</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Exercise Content -->
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        <!-- Header -->
+        <div class="text-center mb-12">
+            <div class="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-2xl mb-4">
+                <i class="fas fa-globe-americas text-3xl text-green-500"></i>
+            </div>
+            <h1 class="text-4xl font-bold text-gray-800 mb-4">5-4-3-2-1 Grounding Exercise</h1>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">Bring yourself back to the present moment by engaging all your senses</p>
+            
+            <div class="flex justify-center space-x-6 mt-6">
+                <div class="flex items-center text-gray-600">
+                    <i class="fas fa-clock mr-2"></i>
+                    <span>3-5 minutes</span>
+                </div>
+                <div class="flex items-center text-gray-600">
+                    <i class="fas fa-eye mr-2"></i>
+                    <span>Present Awareness</span>
+                </div>
+                <div class="flex items-center text-gray-600">
+                    <i class="fas fa-brain mr-2"></i>
+                    <span>Reduces Anxiety</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <!-- Left Column - Interactive Grounding -->
+            <div class="bg-white rounded-2xl shadow-lg p-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">🌍 Grounding Practice</h2>
+                
+                <!-- Progress Indicator -->
+                <div class="mb-8">
+                    <div class="flex justify-between text-sm text-gray-600 mb-2">
+                        <span>Progress</span>
+                        <span id="progressText">Step 1 of 5</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-3">
+                        <div id="progressBar" class="bg-green-500 h-3 rounded-full transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- Current Sense Display -->
+                <div class="text-center mb-8">
+                    <div id="senseDisplay" class="sense-card bg-gradient-to-br from-green-400 to-blue-500 rounded-2xl p-8 text-white">
+                        <div id="senseIcon" class="text-5xl mb-4">👀</div>
+                        <h3 id="senseTitle" class="text-2xl font-bold mb-2">5 Things You See</h3>
+                        <p id="senseDescription" class="text-lg opacity-90">Look around and name 5 things you can see</p>
+                    </div>
+                </div>
+
+                <!-- User Input -->
+                <div class="mb-6">
+                    <textarea 
+                        id="userInput" 
+                        placeholder="Type what you notice here..." 
+                        class="w-full border border-gray-300 rounded-xl px-4 py-3 h-32 focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"
+                    ></textarea>
+                </div>
+
+                <!-- Controls -->
+                <div class="text-center space-y-4">
+                    <button onclick="nextStep()" id="nextBtn" class="w-full bg-green-500 text-white py-4 rounded-xl font-semibold text-lg hover:bg-green-600 transition">
+                        <i class="fas fa-arrow-right mr-2"></i>Next Step
+                    </button>
+                    <button onclick="resetExercise()" class="w-full bg-gray-500 text-white py-3 rounded-xl font-semibold hover:bg-gray-600 transition">
+                        <i class="fas fa-redo mr-2"></i>Restart Exercise
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right Column - Instructions & Benefits -->
+            <div class="space-y-6">
+                <!-- Benefits -->
+                <div class="bg-green-50 rounded-2xl p-6">
+                    <h3 class="text-xl font-bold text-green-800 mb-4">💫 Benefits</h3>
+                    <div class="grid grid-cols-1 gap-3">
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-check-circle text-green-500"></i>
+                            <span class="text-green-700">Instantly brings you to present moment</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-check-circle text-green-500"></i>
+                            <span class="text-green-700">Reduces anxiety and panic attacks</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-check-circle text-green-500"></i>
+                            <span class="text-green-700">Helps during emotional overwhelm</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-check-circle text-green-500"></i>
+                            <span class="text-green-700">Improves sensory awareness</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step Guide -->
+                <div class="bg-white rounded-2xl shadow-lg p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">🎯 The 5-4-3-2-1 Method</h3>
+                    <div class="space-y-4">
+                        <div class="progress-step p-4 border-2 border-gray-100 rounded-xl" id="step1Guide">
+                            <div class="flex items-start space-x-4">
+                                <div class="flex-shrink-0 w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center font-semibold">5</div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Things You Can See</h4>
+                                    <p class="text-gray-600 mt-1">Look around and name 5 things you can see</p>
+                                    <img src="https://i.ytimg.com/vi/yJfbxubDgNI/sddefault.jpg" alt="Visual observation" class="mt-3 rounded-lg w-full">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="progress-step p-4 border-2 border-gray-100 rounded-xl opacity-50" id="step2Guide">
+                            <div class="flex items-start space-x-4">
+                                <div class="flex-shrink-0 w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-semibold">4</div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Things You Can Touch</h4>
+                                    <p class="text-gray-600 mt-1">Notice 4 things you can feel and touch</p>
+                                    <img src="https://qph.cf2.quoracdn.net/main-qimg-a63331cf7480ad329ec2cf9366da00b7-pjlq" alt="Touch sensation" class="mt-3 rounded-lg w-full">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="progress-step p-4 border-2 border-gray-100 rounded-xl opacity-50" id="step3Guide">
+                            <div class="flex items-start space-x-4">
+                                <div class="flex-shrink-0 w-8 h-8 bg-purple-500 text-white rounded-full flex items-center justify-center font-semibold">3</div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Things You Can Hear</h4>
+                                    <p class="text-gray-600 mt-1">Listen for 3 things you can hear</p>
+                                    <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxMTEhUTExMVFRUSFxUVFxIVFRUVFRUVFRUWFxUVFxUYHSggGBolGxUVITEhJSkrLi4uFx8zODMtNygtLisBCgoKDg0OGBAQGi0fHx8tLS0tKy0tLS0tLS0tLS0tLS0tLS0tLS0rLS0tLTYtLS0tKy0tLS0tLS0tLSstLS0tLf/AABEIALcBFAMBIgACEQEDEQH/xAAbAAEAAgMBAQAAAAAAAAAAAAAABAUCAwYBB//EADoQAAIBAwEFBQYEBgEFAAAAAAABAgMEESEFEjFBUWFxgZGhBhMiscHRMlLh8BQjQmJygvEzkqKywv/EABkBAQADAQEAAAAAAAAAAAAAAAABAgMEBf/EACERAQEAAwADAQACAwAAAAAAAAABAhEhAxIxQSIyE1FS/9oADAMBAAIRAxEAPwDVd0u3R8SivVya069Tq7qkUt7b9mh50r1csXOVtOPg/uQ6ixrjPZl6eRaXVq1wK6rSa54NIxqNK5b5ruWhhUkktdOxYPZRXJrvx8iM0u/vLyKVjKuu3z/QyjNPk/Nv1NTcei8dfkFLPPw4LyJQmU01qmu7OvoWNhcJ8k+7K7+ZTU2uTx3pomU+OeK7PqRYtH2L2duF7nefKKeeOGmsd+rj+0XNC431l8I6qPJJpby7eLOLtble4t4J8cuWHn8LWPPOfA6C1rYjjmvqk9fMrnnd6a+Hxyz2q02hcKMK0FwlDPipRX1Ods6jWhL2q3uxeeifjx9Svo1MSM7l104YyTi7oVNDYrhKpHsTfyRFo1SHd1sVY/4v5oW8JOuzt67wZK6aafTXyKuyvE4o3OZpKwuLsKU1JKS4NJrxMys2BWzBx5wfo9V9SzOvG7m3m54+tsAASqAAAAAAAAAAAAAAAAAAD5FViQK1uWcoGupHQ8t7Njldo2+ChuYY7zs7630OY2jSwaY1jnFFVgmRp0O5dpNrLDNTSf7/AHk1jCoUqCX6HjgufyJSxww8Ixa7PNlto01JY5+mDfby1Wnin+0apcNUKElvc19Al2VjXxKK/Kl66v5nYWFbOvj6HC2VTeqPh/Tw/wAUdls94SMcvrr8XMEza1X+U3018mValwZZX8c02uqZB2XZ5px15Ipl9az4mUK5Euqmase6S9C0oWMe0ibWt1Fxklwl89CfxXfUvZcnwLuk9DnbWrgurarktjUZT9XuxK2KqX504+PFfL1OlONs6nxxa/pal5HQyunJdO7T1N/FnqOHz+K3LcWII1hUbjrxTa+3pgkm8u5ty2augAEoAAAAAAAAAAAAAAAAfKTCUTMKJ5b2kSvSyjmNpUNWjr6kSh2nS3s9S2LPOOLuqWv70/QgSWC9uqWfAp7ims6o2lc9iO557lxZpk3x+fDw6m2cOXiYyt1xll9n6vgWVafecvlksdmbKq15JU4yk+xcuGXyS7WNmWkqk1CCUctLKWcJvGdeP1Z9n2TZU7SlGEVrxberb6t83krlnpp4/H7OPpeyNzDM2o8vhUvi0ST7CZYVGniWjWjT4pnQ3W0ub0XaVtaMaklPnwyuZh/k3Xb/AIvXFsuJZg+4j7GqfAl008tCw9wt3QpbGWHOPST9dfqMvqsdDTkRdtLNN9VqaqNc2XU8wfcIrZ1FscySeGXtpSljgQNmP4Y9yLqlU0LY6VyyrDZ1V77zpwRfxqrBx07nFR95eWdfKRfCozx31fWFxieOUtPHl9i4OXlLpxWq7zo7arvxjL8yT/Q6vHfxwefHV22gA0YAAAAAAAAAAAAAAAAPliiZbpmoGeDy3tItQp9ow8Oj7S9nArNoUtHkmKZORvqTznHeinuqf/PBnRXtN641a9V17yluI8f36GsrGxVTml2v969pohScpd/7bJk6ZJ2XbZmtOaLe2lPXbr9hbMjRVPT4m4Sl3rOnctC823tHdhprJ8Pv3FVCvjdb5Y17EmQ6dV1ZubzjOi6I5srt34SSIF6pyblKTff9uRZ7Bq4WOj+ZI2jb/wApvoskDY/GT7jPWuxvLvGx1tKWUUVdbteS/Mk/o/oW1pPQrNuRxOM113X4/rg2yc0+s4zwyROXwkT+Hk0mSo0Hu8RIZNuy6nwLuLalUKDZcsJro38yypVCZxTKI1xL+YyzsbvGhVbQ0lGXh5kq2y8PQfKtjqx0tOtlHQbAqZpY/LKS+v1OTtITem6dB7PVHGUoS0ziS8NH9PI6PHf5Rx+fH+N0vgAdThAAAAAAAAAAAAAAAAfNImaMYmTPMeywmiBdrOSfNkK6RFTpzt5Q54Ka4ofvmdLcLiisuKfTn2l5WWWKk/guePFk2wtsPgb4W7fUlUaKRFyWxwZ1KTkt1c8L7lhb20YJaHP1dsOM2oYa4EqG03LiUrbGbX1xT3qckuafyKKwW7TlLqyz2dctsj1aOMQS4yfkn/wVa3kWGzqmUNrU96GO1Y80T9n2Wmuhjte1Shno0/U2s45d9brey+HVm2NoknnUztuCJO7oMTJzP4aslwzqS4Qk32GTt06z7F9S2oWizxI11Nuop7ylos8mvmWlo0NpW8VB4IVrX4E5XSuPY6S3raG5V92UZ/lefDg15ZKq3qkxSyi3tWdxjs0z0g7Grb1GPWK3X/rp8sE47pdzbzbNXQACUAAAAAAAAAAAAAD5oeOeD2TNMpHlvaj2cyPXehlKWDROZCyFXiQpwJ1YiLVsSq2daoR6cTVctqEuuGvPQsqFDVPoQ9v0t2pHH4Zxy12rT7DW145+hS7DbSiy1tqUeIoWmZLtNeaJ9T9l22I7zPLKpvVX0jp9yyu1uU1FcZFFsSLhUlF8m/XUyv1e3cdvbQ0I22o/y5G60qaHm0NYNdhrbxzSdQ7W40ROVbQ5qzr/AA9q08tCdSvORnK1yxSYT/mvuX1LKlVOYuLtxqrKwpaZ7eRZ0rkneqr67iyvJZizn7afFdGW0q+UQ9nWylOb7ib1E4lWlctadbQiRsdeSRNVk8aMtJdM8rF57LVsqpHo1L/uWP8A5L05X2azCu4t/ji13tNNem8dUdfhv8XB55rOgANWIAAAAAAAAAAAAA+YSZolIzmzRKR5de3HkpGibMpSNUmVS1VEaqMdWbme0KeoG6OhH2vS3/drpveuCRJ8X0INrTnVnvP8PJdhaLYzabbbGco8Ul3ZJdvaU6OsnvPyJ1OW5DBQ3ldzb6LiTcuJmP8AtvnV97UzyRCvKe5XT5Sj6p/qTtnw0z1Im2aEpzpqLSeXlvksFabWdtd6G2tcpokbK2JS3VvNzfa8LyRZS2BQa/Dr3yx5ZLTHLTG547c3szYEnmpKWFN5jHGuOr7y4s9lU4vL17yzuYbqSXJEZNlvWRFytjDauxo1qeMYz049hUvYE4xWHl89cZOspVFhI1XNdFssZe1nhllORyysqiWqfZjU17Kq4nJPR6aHSU22nhaHNbSo1YTVRwai3hvsfBtd5leTjaXfK6KmyXCZQWd9njyLS3uMmmOUrLPCxJ95uVIT/K033c/TJ16ZxlXVHS7Dr71GOeMfhf8ArovTB0eG9scfnx5KngA6HMAAAAAAAAAAAAAPk8pGlnspGqozyntsZTMcmOTJEJeJG+gjBo2wWgS0ZTeHwfEsI1acI6FBXk3N4NkYSfEbsWkibVunLRcCNOSzuLxPLmtuRwtZS0X3M9n7Mk9W9XrlP6DGb6nKycS6c8ES7q5qwXZL6E6dlKPaiqoZnVlLlH4fuRbdp5p1Oz6uFxLihXOZtajRY0q+DTDPTHPDa0vX8LfQrFccDdTut7KyVtam4y14PgMsv2Ixw/KuKdc111niaKLWgvG0i1vFZOry0aUUiTOnGSxJJp8nwKGzuspFhTuC+OXGWWFlZXmw4S1jiLRW1dlTh2rqvsXlOozY5k+mP1HvlOKKnvcJIvPZip/1I9qkvFYfyRpqJPisjZbUKy6TTj9V6r1LYcyjPy/ywrowAdbhAAAAAAAAAAAAAHyBmqozdJGmZ5L22sySPIo2JBLJGWcJmDZrvKu7BsRLTb41Z7XuYxTb5FRX2rTp/imk3/SnmT8OJEt6k68k2sQXCP1faTra+5jFvs2Lqz95LuS6I62wgsFZsu2wloXtGnpwNJNMbdsbh4RQ7OkpNvjmTfqWm1quINLjL4V1y9ENlezkIwSTmu+WfoZ/bxfck6zhaJ6/UlU7DPGS7jRdWFalrH+ZHpwkvozKhtDH41KP+SaXmTLN6sVu7N41lUtXTe9xXPsN0oxqRxlEmlexlokmQ7nZbzvUZKL/AC/0vw5Ftf8APVd7/txlb2SXMXdJtdhC/jpUpYqx3X14xfiTal4pR0Y3NaLMt7Q7XoWlvJJalXCql4nv8UupGOWk5Y2uloVU+Zv92jl6W0kuZPt9rLPE1nkjHLxZT4t5RXQg3bccSX9LT8nkk0ruMkQdpT0LX4ym96rr4vKz1PSHsetv0acv7UvFaP5Ew65dxw2augAEoAAAAAAAAAAB8imjSbsmLR5Ve2wSPUD3BCWEnqUHtdduMFFPDk8+CL6b1OK9rbjNRr8qSLYTdVzuopNj2bqVHJ8E8H0TY+z8YKP2UsfhTfPU7vZ9JLXka73VJNRKtrXQk1JyWijnPT9TKKk+CSJltTx39R67T7aRbXZuWpz1kuC5IsoQSGTCTJ9ZFblcvrfvkdzw8cmeLiezWSEaaKtpTeqW6+sdPTgZ21Ld0fg+pJjS7DeqKaw0Nd2j25pBuqSeksNPlgrXsKnxg5R7E9PIvKtvpjBgqLSFkv0mVnyuTuNj1c6VF4rX0Juz/ZvOtWpJ9kfhXnxLV0tSztaRWePG1pl5cpPqNabAt4r/AKaf+TcvmyarGitPdwX+qNvA0VajN5jjPxzXLK36jXVvBfhzHsRR7Rq40zktrhnL7XrYyZ5rYu79kpZtYPtn/wC8i4K/2ft/d21KL4qCbXbL4n6tlgdmM1jHBnd5UABZUAAAAAAAAAAHyA9weDePKe28PGz1s1SZCWutPHgfPdqVPeVn/dL9Dsds3O5Tkzi7VZqR7zXCMfJfx2eyI7qS/eDrLLj2I5rZ0eC8TqrKOCcYm1ZwZJps0U48zbE1Z2t7Z5gxgb0hYSvKcMmx0zOnE27hXRcmqhEkJCnDQycSZGdy61VFzNFapjvJFQr6kXkrV8etlFLiyZGRCjHB7KrgmcLNpk6neRamXwNfv2+DPJSZbautI9zPR5Odjbe+uadLlOayv7V8UvRMub6rpqe+xFtv3FSq+FOKgv8AKby8dyj/AOREntlIrlfXG13AAOxwgAAAAAAAAAAAAD44pHsWAeU9ysJyI9WoAEVzPtLX4R8X9CltV8SfRoA2jnv13myNUjptn8QBE34u6Kyb40wDaM7W6NM3wpHgCNt0YG1RAGlLWcYnkonoJU31pmjUqSAKVrLxmqSPJW6fE9BMiPao9S1iuCI9WthaIAi8Wnfqi2nW0Z0vsRQ3bZS51Zzm/B7i9IrzAJ8P9mXn/qvwAdTlAAAAAAAAAAAAAH//2Q==" alt="Listening" class="mt-3 rounded-lg w-full">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="progress-step p-4 border-2 border-gray-100 rounded-xl opacity-50" id="step4Guide">
+                            <div class="flex items-start space-x-4">
+                                <div class="flex-shrink-0 w-8 h-8 bg-yellow-500 text-white rounded-full flex items-center justify-center font-semibold">2</div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Things You Can Smell</h4>
+                                    <p class="text-gray-600 mt-1">Identify 2 things you can smell</p>
+                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTW_KqIsuB7bFg9QTSlqzsHASgNHb-AZERuDm0rOeeX27FMmLBZ8XSzoSK5QDP_AEhaEmY&usqp=CAU" alt="Smell" class="mt-3 rounded-lg w-full">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="progress-step p-4 border-2 border-gray-100 rounded-xl opacity-50" id="step5Guide">
+                            <div class="flex items-start space-x-4">
+                                <div class="flex-shrink-0 w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center font-semibold">1</div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Thing You Can Taste</h4>
+                                    <p class="text-gray-600 mt-1">Recognize 1 thing you can taste</p>
+                                    <img src="https://media.post.rvohealth.io/wp-content/uploads/2020/09/taste-impaired_thumb-1-732x549.jpg" alt="Taste" class="mt-3 rounded-lg w-full">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Completion -->
+                <div class="text-center">
+                    <button onclick="completeExercise()" class="bg-green-500 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-green-600 transition">
+                        ✅ I've Completed This Exercise
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const steps = [
+            {
+                number: 5,
+                sense: "See",
+                icon: "👀",
+                title: "5 Things You See",
+                description: "Look around and name 5 things you can see",
+                examples: "e.g., a lamp, your hands, a window, a book, a plant"
+            },
+            {
+                number: 4,
+                sense: "Touch",
+                icon: "✋",
+                title: "4 Things You Can Touch",
+                description: "Notice 4 things you can feel and touch",
+                examples: "e.g., your clothes, the chair, your phone, a pen"
+            },
+            {
+                number: 3,
+                sense: "Hear",
+                icon: "👂",
+                title: "3 Things You Can Hear",
+                description: "Listen for 3 things you can hear",
+                examples: "e.g., birds, fan, your breath, distant traffic"
+            },
+            {
+                number: 2,
+                sense: "Smell",
+                icon: "👃",
+                title: "2 Things You Can Smell",
+                description: "Identify 2 things you can smell",
+                examples: "e.g., fresh air, coffee, perfume, books"
+            },
+            {
+                number: 1,
+                sense: "Taste",
+                icon: "👅",
+                title: "1 Thing You Can Taste",
+                description: "Recognize 1 thing you can taste",
+                examples: "e.g., coffee, mint, the air, water"
+            }
+        ];
+
+        let currentStep = 0;
+        let userResponses = [];
+
+        function updateDisplay() {
+            const step = steps[currentStep];
+            
+            // Update main display
+            document.getElementById('senseIcon').textContent = step.icon;
+            document.getElementById('senseTitle').textContent = step.title;
+            document.getElementById('senseDescription').textContent = step.description;
+            
+            // Update progress
+            const progress = ((currentStep + 1) / steps.length) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+            document.getElementById('progressText').textContent = `Step ${currentStep + 1} of ${steps.length}`;
+            
+            // Update step guides
+            document.querySelectorAll('.progress-step').forEach((guide, index) => {
+                if (index <= currentStep) {
+                    guide.classList.remove('opacity-50');
+                } else {
+                    guide.classList.add('opacity-50');
+                }
+            });
+
+            // Update button text for last step
+            if (currentStep === steps.length - 1) {
+                document.getElementById('nextBtn').innerHTML = '<i class="fas fa-check mr-2"></i>Complete Exercise';
+            }
+        }
+
+        function nextStep() {
+            const userInput = document.getElementById('userInput').value.trim();
+            
+            if (userInput) {
+                userResponses[currentStep] = userInput;
+                
+                if (currentStep < steps.length - 1) {
+                    currentStep++;
+                    document.getElementById('userInput').value = '';
+                    updateDisplay();
+                } else {
+                    completeExercise();
+                }
+            } else {
+                alert('Please take a moment to notice and write down what you observe.');
+            }
+        }
+
+        function resetExercise() {
+            currentStep = 0;
+            userResponses = [];
+            document.getElementById('userInput').value = '';
+            document.getElementById('nextBtn').innerHTML = '<i class="fas fa-arrow-right mr-2"></i>Next Step';
+            updateDisplay();
+        }
+
+        function completeExercise() {
+            if (userResponses.length === steps.length) {
+                const summary = userResponses.map((response, index) => 
+                    `${steps[index].number} ${steps[index].sense.toLowerCase()}: ${response}`
+                ).join('\n');
+                
+                if (confirm('🎉 Great job completing the grounding exercise!\n\nWould you like to see your observations?')) {
+                    alert('Your Grounding Observations:\n\n' + summary);
+                }
+                
+                // Here you can save to backend
+                window.location.href = 'exercises.html';
+            } else {
+                alert('Please complete all 5 steps before finishing.');
+            }
+        }
+
+        // Load user and initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                const user = JSON.parse(savedUser);
+                document.getElementById('username').textContent = user.username;
+            }
+            updateDisplay();
+        });
+    </script>
+</body>
+</html>

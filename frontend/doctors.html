@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Doctors - Soul Connect</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .doctor-card { transition: all 0.3s ease; }
+        .doctor-card:hover { transform: translateY(-3px); }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="gradient-bg text-white shadow-lg">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-heart text-2xl"></i>
+                    <h1 class="text-2xl font-bold">Soul Connect</h1>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="index.html" class="hover:text-purple-200">Home</a>
+                    <a href="chat.html" class="hover:text-purple-200">Chat</a>
+                    <a href="exercises.html" class="hover:text-purple-200">Exercises</a>
+                    <a href="doctors.html" class="font-semibold border-b-2">Find Doctors</a>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <span id="username" class="font-semibold">User</span>
+                    <button onclick="logout()" class="bg-white text-purple-600 px-4 py-2 rounded-lg font-semibold hover:bg-purple-50">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Doctors Search Section -->
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-gray-800 mb-4">🏥 Find Mental Health Professionals</h1>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">Connect with qualified psychiatrists, therapists, and counselors in your area</p>
+        </div>
+
+        <!-- Search Form -->
+        <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">📍 City</label>
+                    <select id="citySelect" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                        <option value="">Select your city</option>
+                        <option value="delhi">Delhi</option>
+                        <option value="mumbai">Mumbai</option>
+                        <option value="bangalore">Bangalore</option>
+                        <option value="chennai">Chennai</option>
+                        <option value="kolkata">Kolkata</option>
+                        <option value="hyderabad">Hyderabad</option>
+                        <option value="pune">Pune</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">🎯 Professional Type</label>
+                    <select id="specializationSelect" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                        <option value="psychiatrist">Psychiatrist</option>
+                        <option value="psychologist">Psychologist</option>
+                        <option value="therapist">Therapist</option>
+                        <option value="counselor">Counselor</option>
+                        <option value="all">All Mental Health</option>
+                    </select>
+                </div>
+
+                <div class="flex items-end">
+                    <button onclick="searchDoctors()" class="w-full bg-purple-600 text-white py-3 rounded-lg font-semibold hover:bg-purple-700 transition flex items-center justify-center">
+                        <i class="fas fa-search mr-2"></i>
+                        Search Professionals
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="resultsSection" class="hidden">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800" id="resultsTitle">Search Results</h2>
+                <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm" id="resultsCount"></span>
+            </div>
+
+            <div id="doctorsList" class="space-y-6">
+                <!-- Doctors will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loadingState" class="hidden text-center py-12">
+            <div class="flex justify-center mb-4">
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500"></div>
+            </div>
+            <p class="text-gray-600">Searching for mental health professionals...</p>
+        </div>
+
+        <!-- Emergency Section -->
+        <div class="bg-red-50 border border-red-200 rounded-2xl p-8 mt-12">
+            <div class="text-center">
+                <i class="fas fa-exclamation-triangle text-3xl text-red-500 mb-4"></i>
+                <h3 class="text-2xl font-bold text-red-800 mb-4">Emergency Support Available</h3>
+                <p class="text-red-700 mb-6">If you need immediate help, these helplines are available 24/7</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
+                    <div class="bg-white p-4 rounded-lg border border-red-200">
+                        <div class="font-semibold text-red-700">Vandrevala Foundation</div>
+                        <div class="text-lg font-bold">+91-9999666555</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg border border-red-200">
+                        <div class="font-semibold text-red-700">AASRA</div>
+                        <div class="text-lg font-bold">+91-9820466726</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg border border-red-200">
+                        <div class="font-semibold text-red-700">Emergency</div>
+                        <div class="text-lg font-bold">112 / 911</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', () => {
+           const savedUser = localStorage.getItem('currentUser');
+           if (!savedUser) {
+              window.location.href = 'index.html';
+               return;
+            }
+    
+           const user = JSON.parse(savedUser);
+            document.getElementById('username').textContent = user.username;
+        });
+
+
+
+
+        async function searchDoctors() {
+            const city = document.getElementById('citySelect').value;
+            const specialization = document.getElementById('specializationSelect').value;
+
+            if (!city) {
+                alert('Please select a city');
+                return;
+            }
+
+            // Show loading
+            document.getElementById('loadingState').classList.remove('hidden');
+            document.getElementById('resultsSection').classList.add('hidden');
+
+            try {
+                // Call your backend API (SAME as Streamlit)
+                const response = await fetch(`http://localhost:8080/find-doctors/${city}?specialization=${specialization}`);
+                const data = await response.json();
+
+                // Hide loading
+                document.getElementById('loadingState').classList.add('hidden');
+                
+                // Show results
+                displayDoctors(data.professionals, city, specialization);
+                
+            } catch (error) {
+                console.error('Error searching doctors:', error);
+                document.getElementById('loadingState').classList.add('hidden');
+                alert('Error searching for doctors. Please try again.');
+            }
+        }
+
+        function displayDoctors(doctors, city, specialization) {
+            const resultsSection = document.getElementById('resultsSection');
+            const resultsTitle = document.getElementById('resultsTitle');
+            const resultsCount = document.getElementById('resultsCount');
+            const doctorsList = document.getElementById('doctorsList');
+
+            resultsTitle.textContent = `Mental Health Professionals in ${city.charAt(0).toUpperCase() + city.slice(1)}`;
+            resultsCount.textContent = `${doctors.length} found`;
+
+            if (doctors.length === 0) {
+                doctorsList.innerHTML = `
+                    <div class="text-center py-12 bg-white rounded-2xl shadow-lg">
+                        <i class="fas fa-search text-4xl text-gray-400 mb-4"></i>
+                        <h3 class="text-xl font-semibold text-gray-600 mb-2">No professionals found</h3>
+                        <p class="text-gray-500">Try searching in a different city or professional type.</p>
+                    </div>
+                `;
+            } else {
+                doctorsList.innerHTML = doctors.map((doctor, index) => `
+                    <div class="doctor-card bg-white rounded-2xl shadow-lg p-6">
+                        <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between">
+                            <div class="flex-1">
+                                <div class="flex items-start justify-between mb-4">
+                                    <div>
+                                        <h3 class="text-xl font-bold text-gray-800">👨‍⚕️ ${doctor.name || 'Mental Health Professional'}</h3>
+                                        <p class="text-gray-600">${doctor.specialization || 'Mental Health Specialist'}</p>
+                                    </div>
+                                    <div class="flex items-center bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full">
+                                        <i class="fas fa-star mr-1"></i>
+                                        <span>${doctor.rating || '4.0'}</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="space-y-2 mb-4">
+                                    <div class="flex items-center text-gray-600">
+                                        <i class="fas fa-map-marker-alt mr-3 w-5"></i>
+                                        <span>${doctor.address || 'Address information available'}</span>
+                                    </div>
+                                    ${doctor.phone && doctor.phone !== 'Phone not available' ? `
+                                    <div class="flex items-center text-gray-600">
+                                        <i class="fas fa-phone mr-3 w-5"></i>
+                                        <span>${doctor.phone}</span>
+                                    </div>
+                                    ` : ''}
+                                    ${doctor.website && doctor.website !== 'Website not available' ? `
+                                    <div class="flex items-center text-gray-600">
+                                        <i class="fas fa-globe mr-3 w-5"></i>
+                                        <span>${doctor.website}</span>
+                                    </div>
+                                    ` : ''}
+                                </div>
+                            </div>
+                            
+                            <div class="lg:ml-6 lg:mt-0 mt-4 flex space-x-3">
+                                ${doctor.phone && doctor.phone !== 'Phone not available' ? `
+                                <button onclick="callDoctor('${doctor.phone}')" class="bg-green-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-600 transition flex items-center">
+                                    <i class="fas fa-phone mr-2"></i>
+                                    Call
+                                </button>
+                                ` : ''}
+                                <button onclick="showDirections('${doctor.address}')" class="bg-blue-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-600 transition flex items-center">
+                                    <i class="fas fa-directions mr-2"></i>
+                                    Directions
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            resultsSection.classList.remove('hidden');
+            window.scrollTo({ top: resultsSection.offsetTop - 100, behavior: 'smooth' });
+        }
+
+        function callDoctor(phoneNumber) {
+            if (confirm(`Call ${phoneNumber}?`)) {
+                window.open(`tel:${phoneNumber}`);
+            }
+        }
+
+        function showDirections(address) {
+            const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+            window.open(mapsUrl, '_blank');
+        }
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = 'index.html';
+        }
+
+        // Load user
+        document.addEventListener('DOMContentLoaded', () => {
+            const username = localStorage.getItem('username');
+            if (username) {
+                document.getElementById('username').textContent = username;
+            }
+        });
+    </script>
+</body>
+</html>

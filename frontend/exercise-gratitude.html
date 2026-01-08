@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gratitude Journaling - Soul Connect</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .gratitude-card { transition: all 0.3s ease; }
+        .gratitude-card:hover { transform: translateY(-2px); }
+        .floating { animation: float 3s ease-in-out infinite; }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-yellow-50 to-orange-50 min-h-screen">
+    <nav class="gradient-bg text-white shadow-lg">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <a href="exercises.html" class="flex items-center space-x-3">
+                        <i class="fas fa-arrow-left"></i>
+                        <i class="fas fa-heart text-2xl"></i>
+                        <h1 class="text-2xl font-bold">Soul Connect</h1>
+                    </a>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="index.html" class="hover:text-purple-200">Home</a>
+                    <a href="chat.html" class="hover:text-purple-200">Chat</a>
+                    <a href="exercises.html" class="hover:text-purple-200">Exercises</a>
+                    <a href="doctors.html" class="hover:text-purple-200">Doctors</a>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <span id="username" class="font-semibold">User</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        <div class="text-center mb-12">
+            <div class="inline-flex items-center justify-center w-20 h-20 bg-yellow-100 rounded-2xl mb-4 floating">
+                <i class="fas fa-hands-praying text-3xl text-yellow-500"></i>
+            </div>
+            <h1 class="text-4xl font-bold text-gray-800 mb-4">Gratitude Journaling</h1>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">Shift your focus to positive aspects and cultivate appreciation</p>
+            
+            <div class="flex justify-center space-x-6 mt-6">
+                <div class="flex items-center text-gray-600">
+                    <i class="fas fa-clock mr-2"></i>
+                    <span>3-5 minutes</span>
+                </div>
+                <div class="flex items-center text-gray-600">
+                    <i class="fas fa-sun mr-2"></i>
+                    <span>Positive Focus</span>
+                </div>
+                <div class="flex items-center text-gray-600">
+                    <i class="fas fa-heart mr-2"></i>
+                    <span>Increases Happiness</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">🙏 Today's Gratitude Practice</h2>
+            
+            <!-- Date Display -->
+            <div class="text-center mb-8">
+                <div class="inline-block bg-yellow-100 text-yellow-700 px-4 py-2 rounded-lg font-semibold">
+                    <i class="fas fa-calendar mr-2"></i>
+                    <span id="currentDate"></span>
+                </div>
+            </div>
+
+            <!-- Gratitude Prompts -->
+            <div class="space-y-6 mb-8">
+                <div class="gratitude-card bg-yellow-50 border-2 border-yellow-200 rounded-xl p-6">
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0 w-10 h-10 bg-yellow-500 text-white rounded-full flex items-center justify-center font-semibold text-lg">1</div>
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-yellow-800 text-lg mb-2">What made you smile today?</h3>
+                            <textarea 
+                                id="gratitude1" 
+                                placeholder="Write about something that brought you joy, no matter how small..." 
+                                class="w-full border border-yellow-300 rounded-lg px-4 py-3 h-24 focus:outline-none focus:ring-2 focus:ring-yellow-500 resize-none bg-white"
+                            ></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gratitude-card bg-orange-50 border-2 border-orange-200 rounded-xl p-6">
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0 w-10 h-10 bg-orange-500 text-white rounded-full flex items-center justify-center font-semibold text-lg">2</div>
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-orange-800 text-lg mb-2">Who are you thankful for?</h3>
+                            <textarea 
+                                id="gratitude2" 
+                                placeholder="Think of someone who supported you or made a difference..." 
+                                class="w-full border border-orange-300 rounded-lg px-4 py-3 h-24 focus:outline-none focus:ring-2 focus:ring-orange-500 resize-none bg-white"
+                            ></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gratitude-card bg-green-50 border-2 border-green-200 rounded-xl p-6">
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0 w-10 h-10 bg-green-500 text-white rounded-full flex items-center justify-center font-semibold text-lg">3</div>
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-green-800 text-lg mb-2">What comfort are you grateful for?</h3>
+                            <textarea 
+                                id="gratitude3" 
+                                placeholder="Consider simple comforts like a warm bed, good food, or safety..." 
+                                class="w-full border border-green-300 rounded-lg px-4 py-3 h-24 focus:outline-none focus:ring-2 focus:ring-green-500 resize-none bg-white"
+                            ></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reflection -->
+            <div class="bg-blue-50 rounded-xl p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-800 mb-3">💭 Reflection Prompt</h3>
+                <p class="text-blue-700 mb-4">Take a moment to feel the gratitude in your body. Where do you feel it? How does it change your energy?</p>
+                <textarea 
+                    id="reflection" 
+                    placeholder="Describe how gratitude feels in this moment..." 
+                    class="w-full border border-blue-300 rounded-lg px-4 py-3 h-20 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none bg-white"
+                ></textarea>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="text-center space-y-4">
+                <button onclick="saveGratitude()" class="w-full bg-yellow-500 text-white py-4 rounded-xl font-semibold text-lg hover:bg-yellow-600 transition">
+                    <i class="fas fa-save mr-2"></i>Save My Gratitude Entry
+                </button>
+                <button onclick="startNewEntry()" class="w-full bg-green-500 text-white py-3 rounded-xl font-semibold hover:bg-green-600 transition">
+                    <i class="fas fa-plus mr-2"></i>Start New Entry
+                </button>
+            </div>
+        </div>
+
+        <!-- Benefits & Tips -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Benefits -->
+            <div class="bg-white rounded-2xl shadow-lg p-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">💫 Benefits of Gratitude</h3>
+                <div class="space-y-3">
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-brain text-yellow-500"></i>
+                        <span class="text-gray-700">Rewires brain for positivity</span>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-heart text-red-500"></i>
+                        <span class="text-gray-700">Reduces stress and anxiety</span>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-moon text-blue-500"></i>
+                        <span class="text-gray-700">Improves sleep quality</span>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-users text-green-500"></i>
+                        <span class="text-gray-700">Strengthens relationships</span>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-shield-alt text-purple-500"></i>
+                        <span class="text-gray-700">Builds emotional resilience</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tips -->
+            <div class="bg-white rounded-2xl shadow-lg p-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">💡 Gratitude Tips</h3>
+                <div class="space-y-3">
+                    <div class="flex items-start space-x-3">
+                        <i class="fas fa-lightbulb text-yellow-500 mt-1"></i>
+                        <span class="text-gray-700">Be specific - detail makes gratitude more powerful</span>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <i class="fas fa-lightbulb text-yellow-500 mt-1"></i>
+                        <span class="text-gray-700">Focus on people, not just things</span>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <i class="fas fa-lightbulb text-yellow-500 mt-1"></i>
+                        <span class="text-gray-700">Notice small, everyday blessings</span>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <i class="fas fa-lightbulb text-yellow-500 mt-1"></i>
+                        <span class="text-gray-700">Practice daily for best results</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Previous Entries (Sample) -->
+        <div class="bg-white rounded-2xl shadow-lg p-6 mt-8">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">📖 Your Gratitude Journey</h3>
+            <div class="space-y-4">
+                <div class="border-l-4 border-yellow-400 pl-4 py-2">
+                    <div class="text-sm text-gray-500">Yesterday</div>
+                    <p class="text-gray-700">"Grateful for the warm sunshine during my walk and my friend's encouraging message."</p>
+                </div>
+                <div class="border-l-4 border-yellow-400 pl-4 py-2">
+                    <div class="text-sm text-gray-500">2 days ago</div>
+                    <p class="text-gray-700">"Thankful for a good night's sleep and the delicious coffee this morning."</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function setCurrentDate() {
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('en-US', options);
+        }
+
+        function saveGratitude() {
+            const gratitude1 = document.getElementById('gratitude1').value.trim();
+            const gratitude2 = document.getElementById('gratitude2').value.trim();
+            const gratitude3 = document.getElementById('gratitude3').value.trim();
+            const reflection = document.getElementById('reflection').value.trim();
+
+            if (!gratitude1 || !gratitude2 || !gratitude3) {
+                alert('Please take a moment to complete all three gratitude prompts.');
+                return;
+            }
+
+            // In a real app, you would save to backend/localStorage
+            const entry = {
+                date: new Date().toISOString(),
+                gratitudes: [gratitude1, gratitude2, gratitude3],
+                reflection: reflection
+            };
+
+            // Save to localStorage for demo
+            let entries = JSON.parse(localStorage.getItem('gratitudeEntries') || '[]');
+            entries.unshift(entry);
+            localStorage.setItem('gratitudeEntries', JSON.stringify(entries));
+
+            alert('🎉 Your gratitude has been saved!\n\nRegular practice can significantly increase your happiness and wellbeing.');
+            
+            // Optional: Clear fields after saving
+            if (confirm('Would you like to start a new entry?')) {
+                startNewEntry();
+            }
+        }
+
+        function startNewEntry() {
+            document.getElementById('gratitude1').value = '';
+            document.getElementById('gratitude2').value = '';
+            document.getElementById('gratitude3').value = '';
+            document.getElementById('reflection').value = '';
+            setCurrentDate();
+        }
+
+        function loadPreviousEntries() {
+            // This would load from localStorage/backend
+            // For demo, we're using static content
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                const user = JSON.parse(savedUser);
+                document.getElementById('username').textContent = user.username;
+            }
+            setCurrentDate();
+            loadPreviousEntries();
+        });
+    </script>
+</body>
+</html>
